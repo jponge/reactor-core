@@ -18,6 +18,8 @@ package reactor.test;
 
 import java.lang.ref.PhantomReference;
 import java.lang.ref.ReferenceQueue;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -185,12 +187,16 @@ public class MemoryUtils {
 		 */
 		public final String identifier;
 
+		public final List<String> touches;
+
 		public Tracked(String identifier) {
 			this.identifier = identifier;
+			this.touches = new ArrayList<>();
 		}
 
 		public Tracked(String identifier, boolean preReleased) {
 			this.identifier = identifier;
+			this.touches = new ArrayList<>();
 			set(preReleased);
 		}
 
@@ -209,6 +215,11 @@ public class MemoryUtils {
 		public boolean isReleased() {
 	        return get();
 	    }
+
+		public Tracked touch(String msg) {
+			this.touches.add(msg);
+			return this;
+		}
 
 	    @Override
 	    public boolean equals(Object o) {
@@ -231,6 +242,7 @@ public class MemoryUtils {
 	        return "Tracked{" +
 	                " id=" + identifier +
 	                " released=" + get() +
+	                " touches=" + touches +
 	                " }";
 	    }
 	}

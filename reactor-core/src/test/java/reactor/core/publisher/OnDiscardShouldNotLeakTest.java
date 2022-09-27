@@ -45,6 +45,7 @@ import reactor.test.subscriber.AssertSubscriber;
 import reactor.test.util.RaceTestUtils;
 import reactor.util.annotation.Nullable;
 import reactor.util.concurrent.Queues;
+import reactor.util.function.Tuples;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static reactor.core.publisher.Sinks.EmitFailureHandler.FAIL_FAST;
@@ -58,6 +59,11 @@ public class OnDiscardShouldNotLeakTest {
 	// add DiscardScenarios here to test more operators
 	private static final DiscardScenario[] SCENARIOS = new DiscardScenario[] {
 			DiscardScenario.allFluxSourceArray("merge", 4, Flux::merge),
+			DiscardScenario.allFluxSourceArray("zip", 4,
+					sources -> {
+						Publisher[] sources1 = sources.toArray(new Publisher[sources.size()]);
+						return Flux.zip(Tuples::fromArray, sources1).flatMapIterable(Function.identity());
+					}),
 			DiscardScenario.fluxSource("onBackpressureBuffer", Flux::onBackpressureBuffer),
 			DiscardScenario.fluxSource("onBackpressureBufferAndPublishOn", f -> f
 					.onBackpressureBuffer()
