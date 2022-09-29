@@ -18,11 +18,11 @@ package reactor.core.publisher;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
 import reactor.core.Scannable;
@@ -509,7 +509,7 @@ public class MonoZipTest {
 				coordinator = new MonoZip.ZipCoordinator<>(new Mono[2], actual, 2,
 				false, a -> null);
 		MonoZip.ZipInner<String> test = new MonoZip.ZipInner<>(coordinator);
-		Subscription innerSub = Operators.cancelledSubscription();
+		Flow.Subscription innerSub = Operators.cancelledSubscription();
 		test.onSubscribe(innerSub);
 
 		assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(innerSub);

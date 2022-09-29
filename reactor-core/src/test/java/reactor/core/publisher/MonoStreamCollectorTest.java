@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Flow;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -34,7 +35,6 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
@@ -135,7 +135,7 @@ public class MonoStreamCollectorTest {
 
 		MonoStreamCollector.StreamCollectorSubscriber<String, Integer, List<String>> test = new MonoStreamCollector.StreamCollectorSubscriber<>(
 				actual, 1, accumulator, finisher);
-		Subscription parent = Operators.emptySubscription();
+		Flow.Subscription parent = Operators.emptySubscription();
 
 		test.onSubscribe(parent);
 

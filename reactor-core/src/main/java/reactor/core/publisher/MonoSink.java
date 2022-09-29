@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.LongConsumer;
 
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;

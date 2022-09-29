@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ package reactor.core.publisher;
 
 import java.lang.ref.WeakReference;
 import java.time.Duration;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscriber;
 import reactor.core.Scannable;
 import reactor.test.subscriber.AssertSubscriber;
 
@@ -141,7 +141,7 @@ public class MonoDetachTest {
 
 	@Test
 	public void deferredUpstreamProducer() {
-		final AtomicReference<Subscriber<? super Object>> subscriber =
+		final AtomicReference<Flow.Subscriber<? super Object>> subscriber =
 				new AtomicReference<>();
 
 		AssertSubscriber<Object> ts = new AssertSubscriber<>(0);

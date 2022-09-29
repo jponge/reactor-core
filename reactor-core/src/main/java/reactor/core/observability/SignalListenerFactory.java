@@ -16,9 +16,11 @@
 
 package reactor.core.observability;
 
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 
 import reactor.util.context.ContextView;
+
+import java.util.concurrent.Flow;
 
 /**
  * A factory for per-subscription {@link SignalListener}, exposing the ability to generate common state at publisher level
@@ -47,7 +49,7 @@ public interface SignalListenerFactory<T, STATE> {
 	STATE initializePublisherState(Publisher<? extends T> source);
 
 	/**
-	 * Create a new {@link SignalListener} each time a new {@link org.reactivestreams.Subscriber} subscribes to the
+	 * Create a new {@link SignalListener} each time a new {@link Flow.Subscriber} subscribes to the
 	 * {@code source} {@link Publisher}.
 	 * <p>
 	 * The {@code source} {@link Publisher} is the same as the one that triggered common state creation at assembly time in

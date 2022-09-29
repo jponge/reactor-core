@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 package reactor.core.publisher;
 
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.function.Consumer;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.Disposable;
 import reactor.core.Exceptions;
 import reactor.util.annotation.Nullable;
@@ -28,7 +28,7 @@ import reactor.util.context.Context;
 
 
 /**
- * An unbounded Java Lambda adapter to {@link Subscriber}
+ * An unbounded Java Lambda adapter to {@link Flow.Subscriber}
  *
  * @param <T> the value type
  */
@@ -48,7 +48,7 @@ final class LambdaSubscriber<T>
 					"subscription");
 
 	/**
-	 * Create a {@link Subscriber} reacting onNext, onError and onComplete. If no
+	 * Create a {@link Flow.Subscriber} reacting onNext, onError and onComplete. If no
 	 * {@code subscriptionConsumer} is provided, the subscriber will automatically request
 	 * Long.MAX_VALUE in onSubscribe, as well as an initial {@link Context} that will be
 	 * visible by operators upstream in the chain.
@@ -76,7 +76,7 @@ final class LambdaSubscriber<T>
 	}
 
 	/**
-	 * Create a {@link Subscriber} reacting onNext, onError and onComplete. If no
+	 * Create a {@link Flow.Subscriber} reacting onNext, onError and onComplete. If no
 	 * {@code subscriptionConsumer} is provided, the subscriber will automatically request
 	 * Long.MAX_VALUE in onSubscribe, as well as an initial {@link Context} that will be
 	 * visible by operators upstream in the chain.

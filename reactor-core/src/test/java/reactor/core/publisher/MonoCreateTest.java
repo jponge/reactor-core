@@ -19,6 +19,7 @@ package reactor.core.publisher;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -27,7 +28,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.assertj.core.api.Assertions;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
@@ -85,7 +85,7 @@ public class MonoCreateTest {
 							 .onCancel(onCancel::getAndIncrement);
 						}))
 		            .thenAwait()
-		            .consumeSubscriptionWith(Subscription::cancel)
+		            .consumeSubscriptionWith(Flow.Subscription::cancel)
 		            .thenCancel()
 		            .verify();
 		assertThat(onDispose).hasValue(1);
@@ -134,7 +134,7 @@ public class MonoCreateTest {
 	public void monoCreateCancelOnNext() {
 		AtomicInteger onCancel = new AtomicInteger();
 		AtomicInteger onDispose = new AtomicInteger();
-		AtomicReference<Subscription> subscription = new AtomicReference<>();
+		AtomicReference<Flow.Subscription> subscription = new AtomicReference<>();
 		Mono<String> created = Mono.create(s -> {
 			s.onDispose(onDispose::getAndIncrement)
 			 .onCancel(onCancel::getAndIncrement)
@@ -157,7 +157,7 @@ public class MonoCreateTest {
 		AtomicReference<MonoSink<Object>> sink = new AtomicReference<>();
 		StepVerifier.create(Mono.create(sink::set))
 				.thenAwait()
-				.consumeSubscriptionWith(Subscription::cancel)
+				.consumeSubscriptionWith(Flow.Subscription::cancel)
 				.then(() -> sink.get().onCancel(onCancel::getAndIncrement))
 				.thenCancel()
 				.verify();
@@ -170,7 +170,7 @@ public class MonoCreateTest {
 		AtomicReference<MonoSink<Object>> sink = new AtomicReference<>();
 		StepVerifier.create(Mono.create(sink::set))
 				.thenAwait()
-				.consumeSubscriptionWith(Subscription::cancel)
+				.consumeSubscriptionWith(Flow.Subscription::cancel)
 				.then(() -> sink.get().onDispose(onDispose::getAndIncrement))
 				.thenCancel()
 				.verify();
@@ -438,7 +438,7 @@ public class MonoCreateTest {
 
 		BaseSubscriber<Object[]> baseSubscriber = new BaseSubscriber<Object[]>() {
 			@Override
-			protected void hookOnSubscribe(Subscription subscription) {
+			protected void hookOnSubscribe(Flow.Subscription subscription) {
 				//don't request anything, we just store the subscription
 			}
 		};

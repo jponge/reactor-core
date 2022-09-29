@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2015-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,10 @@
 
 package reactor.core.publisher;
 
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 import reactor.core.CoreSubscriber;
+
+import java.util.concurrent.Flow;
 
 /**
  * Wraps multiple Publishers into a ParallelFlux which runs them

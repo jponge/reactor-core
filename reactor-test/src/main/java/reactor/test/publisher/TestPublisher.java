@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2017-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,18 @@
 
 package reactor.test.publisher;
 
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Objects;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow;
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.annotation.Nullable;
 
 /**
- * A {@link Publisher} that you can directly manipulate, triggering
+ * A {@link Flow.Publisher} that you can directly manipulate, triggering
  * {@link #next(Object) onNext}, {@link #complete() onComplete} and
  * {@link #error(Throwable) onError} events, for testing purposes.
  * You can assert the state of the publisher using its {@code assertXXX} methods,
@@ -46,7 +45,7 @@ import reactor.util.annotation.Nullable;
  *
  * @author Simon Basle
  */
-public abstract class TestPublisher<T> implements Publisher<T>, PublisherProbe<T> {
+public abstract class TestPublisher<T> implements Flow.Publisher<T>, PublisherProbe<T> {
 
 	/**
 	 * Create a standard hot {@link TestPublisher}.

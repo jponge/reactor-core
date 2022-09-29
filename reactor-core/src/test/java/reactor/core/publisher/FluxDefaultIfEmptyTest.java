@@ -17,10 +17,11 @@
 package reactor.core.publisher;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.test.subscriber.AssertSubscriber;
+
+import java.util.concurrent.Flow;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -187,7 +188,7 @@ public class FluxDefaultIfEmptyTest {
 		CoreSubscriber<String> actual = new LambdaSubscriber<>(null, e -> { }, null, null);
 		FluxDefaultIfEmpty.DefaultIfEmptySubscriber<String> test =
 				new FluxDefaultIfEmpty.DefaultIfEmptySubscriber<>(actual, "bar");
-		Subscription parent = Operators.emptySubscription();
+		Flow.Subscription parent = Operators.emptySubscription();
 		test.onSubscribe(parent);
 
 		assertThat(test.scan(Scannable.Attr.PREFETCH)).isEqualTo(0);

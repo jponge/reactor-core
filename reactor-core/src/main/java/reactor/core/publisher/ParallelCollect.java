@@ -17,10 +17,11 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 import reactor.core.CoreSubscriber;
 import reactor.core.Fuseable;
 import reactor.core.Scannable;

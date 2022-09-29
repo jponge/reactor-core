@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2015-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package reactor.core.publisher;
 
 import java.util.Arrays;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Publisher;
 import reactor.core.Scannable;
 import reactor.test.StepVerifier;
 import reactor.test.subscriber.AssertSubscriber;
@@ -150,7 +150,7 @@ public class FluxMergeTest {
 	@Test
 	public void scanOperator() {
 		@SuppressWarnings("unchecked")
-		Publisher<String>[] sources = new Publisher[0];
+		Flow.Publisher<String>[] sources = new Flow.Publisher[0];
 		FluxMerge<String> s = new FluxMerge<>(sources, true, 3, Queues.small(), 123, Queues.small());
 		assertThat(s.scan(Scannable.Attr.DELAY_ERROR)).as("delayError").isTrue();
 		assertThat(s.scan(Scannable.Attr.PREFETCH)).as("prefetch").isEqualTo(123);

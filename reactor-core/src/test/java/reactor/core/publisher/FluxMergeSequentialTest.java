@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -31,11 +32,8 @@ import java.util.function.Supplier;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
-import reactor.core.Fuseable;
 import reactor.core.Scannable;
 import reactor.core.publisher.FluxConcatMap.ErrorMode;
 import reactor.core.scheduler.Scheduler;
@@ -803,7 +801,7 @@ public class FluxMergeSequentialTest {
         FluxMergeSequential.MergeSequentialMain<Integer, Integer> test =
         		new FluxMergeSequential.MergeSequentialMain<>(actual, i -> Mono.just(i),
         				5, 123, ErrorMode.BOUNDARY, Queues.unbounded());
-        Subscription parent = Operators.emptySubscription();
+        Flow.Subscription parent = Operators.emptySubscription();
         test.onSubscribe(parent);
 
         assertThat(test.scan(Scannable.Attr.ACTUAL)).isSameAs(actual);
@@ -831,7 +829,7 @@ public class FluxMergeSequentialTest {
         				5, 123, ErrorMode.IMMEDIATE, Queues.unbounded());
         FluxMergeSequential.MergeSequentialInner<Integer> inner =
         		new FluxMergeSequential.MergeSequentialInner<>(main, 123);
-        Subscription parent = Operators.emptySubscription();
+        Flow.Subscription parent = Operators.emptySubscription();
         inner.onSubscribe(parent);
 
         assertThat(inner.scan(Scannable.Attr.ACTUAL)).isSameAs(main);

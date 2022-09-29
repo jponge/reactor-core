@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package reactor.core.publisher;
 
 import java.time.Duration;
+import java.util.concurrent.Flow;
 import java.util.function.Consumer;
 
 import reactor.core.Disposable;
@@ -35,13 +36,13 @@ import reactor.core.scheduler.Schedulers;
 public abstract class ConnectableFlux<T> extends Flux<T> {
 
 	/**
-	 * Connects this {@link ConnectableFlux} to the upstream source when the first {@link org.reactivestreams.Subscriber}
+	 * Connects this {@link ConnectableFlux} to the upstream source when the first {@link Flow.Subscriber}
 	 * subscribes.
 	 *
 	 * <p>
 	 * <img class="marble" src="doc-files/marbles/autoConnect.svg" alt="">
 	 *
-	 * @return a {@link Flux} that connects to the upstream source when the first {@link org.reactivestreams.Subscriber} subscribes
+	 * @return a {@link Flux} that connects to the upstream source when the first {@link Flow.Subscriber} subscribes
 	 */
 	public final Flux<T> autoConnect() {
 		return autoConnect(1);
@@ -49,7 +50,7 @@ public abstract class ConnectableFlux<T> extends Flux<T> {
 
 	/**
 	 * Connects this {@link ConnectableFlux} to the upstream source when the specified amount of
-	 * {@link org.reactivestreams.Subscriber} subscribes.
+	 * {@link Flow.Subscriber} subscribes.
 	 * <p>
 	 * Subscribing and immediately unsubscribing still contributes to the counter that
 	 * triggers the connection.
@@ -67,7 +68,7 @@ public abstract class ConnectableFlux<T> extends Flux<T> {
 
 	/**
 	 * Connects this {@link ConnectableFlux} to the upstream source when the specified amount of
-	 * {@link org.reactivestreams.Subscriber} subscribes and calls the supplied consumer with a {@link Disposable}
+	 * {@link Flow.Subscriber} subscribes and calls the supplied consumer with a {@link Disposable}
 	 * that allows disconnecting.
 	 * <p>
 	 * <img class="marble" src="doc-files/marbles/autoConnectWithMinSubscribers.svg" alt="">
@@ -121,7 +122,7 @@ public abstract class ConnectableFlux<T> extends Flux<T> {
 	}
 
 	/**
-	 * Connects to the upstream source when the first {@link org.reactivestreams.Subscriber} subscribes and disconnects
+	 * Connects to the upstream source when the first {@link Flow.Subscriber} subscribes and disconnects
 	 * when all Subscribers cancelled or the upstream source completed.
 	 *
 	 * <p>
@@ -134,7 +135,7 @@ public abstract class ConnectableFlux<T> extends Flux<T> {
 	}
 
 	/**
-	 * Connects to the upstream source when the given number of {@link org.reactivestreams.Subscriber} subscribes and disconnects
+	 * Connects to the upstream source when the given number of {@link Flow.Subscriber} subscribes and disconnects
 	 * when all Subscribers cancelled or the upstream source completed.
 	 *
 	 * <p>
@@ -149,7 +150,7 @@ public abstract class ConnectableFlux<T> extends Flux<T> {
 	}
 
 	/**
-	 * Connects to the upstream source when the given number of {@link org.reactivestreams.Subscriber} subscribes.
+	 * Connects to the upstream source when the given number of {@link Flow.Subscriber} subscribes.
 	 * Disconnection can happen in two scenarios: when the upstream source completes (or errors) then
 	 * there is an immediate disconnection. However, when all subscribers have cancelled,
 	 * a <strong>deferred</strong> disconnection is scheduled. If any new subscriber comes
@@ -169,7 +170,7 @@ public abstract class ConnectableFlux<T> extends Flux<T> {
 	}
 
 	/**
-	 * Connects to the upstream source when the given number of {@link org.reactivestreams.Subscriber} subscribes.
+	 * Connects to the upstream source when the given number of {@link Flow.Subscriber} subscribes.
 	 * Disconnection can happen in two scenarios: when the upstream source completes (or errors) then
 	 * there is an immediate disconnection. However, when all subscribers have cancelled,
 	 * a <strong>deferred</strong> disconnection is scheduled. If any new subscriber comes

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2019-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ package reactor.core.publisher;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 
 import reactor.core.Fuseable;
 import reactor.core.Scannable;
@@ -153,7 +153,7 @@ public class FluxDoFirstTest {
 
 	@Test
 	public void performsDirectSubscriberToSource_NoFusion() {
-		AtomicReference<Subscription> subRef = new AtomicReference<>();
+		AtomicReference<Flow.Subscription> subRef = new AtomicReference<>();
 		Flux<Integer> test = Flux.just(1, 2)
 		                         .hide()
 		                         .doFirst(() -> {})
@@ -165,7 +165,7 @@ public class FluxDoFirstTest {
 
 	@Test
 	public void performsDirectSubscriberToSource_Fused() {
-		AtomicReference<Subscription> subRef = new AtomicReference<>();
+		AtomicReference<Flow.Subscription> subRef = new AtomicReference<>();
 		Flux<Integer> test = Flux.just(1, 2)
 		                         .map(Function.identity())
 		                         .doFirst(() -> {})

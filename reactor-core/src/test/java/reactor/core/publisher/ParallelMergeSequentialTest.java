@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2017-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,13 @@
 package reactor.core.publisher;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.core.publisher.ParallelMergeSequential.MergeSequentialInner;
 import reactor.core.publisher.ParallelMergeSequential.MergeSequentialMain;
 import reactor.util.concurrent.Queues;
+
+import java.util.concurrent.Flow;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -104,7 +105,7 @@ public class ParallelMergeSequentialTest {
 		MergeSequentialMain<Integer> main = new MergeSequentialMain<>(mainActual, 2,  123, Queues.small());
 		MergeSequentialInner<Integer> test = new MergeSequentialInner<>(main, 456);
 
-		Subscription subscription = Operators.emptySubscription();
+		Flow.Subscription subscription = Operators.emptySubscription();
 		test.onSubscribe(subscription);
 
 		assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(subscription);

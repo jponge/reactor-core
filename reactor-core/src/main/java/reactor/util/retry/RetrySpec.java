@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2020-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package reactor.util.retry;
 
 import java.time.Duration;
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -42,7 +43,7 @@ import reactor.util.context.ContextView;
  * Additionally, to help dealing with bursts of transient errors in a long-lived Flux as if each burst
  * had its own attempt counter, one can choose to set {@link #transientErrors(boolean)} to {@code true}.
  * The comparison to {@link #maxAttempts(long)} will then be done with the number of subsequent attempts
- * that failed without an {@link org.reactivestreams.Subscriber#onNext(Object) onNext} in between.
+ * that failed without an {@link Flow.Subscriber#onNext(Object) onNext} in between.
  * <p>
  * The {@link RetrySpec} is copy-on-write and as such can be stored as a "template" and further configured
  * by different components without a risk of modifying the original configuration.

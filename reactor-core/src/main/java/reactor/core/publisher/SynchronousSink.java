@@ -16,9 +16,10 @@
 
 package reactor.core.publisher;
 
+import java.util.concurrent.Flow;
 import java.util.function.Function;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 import reactor.core.CoreSubscriber;
 import reactor.util.context.Context;
 import reactor.util.context.ContextView;

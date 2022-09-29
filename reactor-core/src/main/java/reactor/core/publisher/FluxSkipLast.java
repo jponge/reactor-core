@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 package reactor.core.publisher;
 
 import java.util.ArrayDeque;
+import java.util.concurrent.Flow;
 
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.util.annotation.Nullable;
 
@@ -61,7 +61,7 @@ final class FluxSkipLast<T> extends InternalFluxOperator<T, T> {
 
 		final int n;
 
-		Subscription s;
+		Flow.Subscription s;
 
 		SkipLastSubscriber(CoreSubscriber<? super T> actual, int n) {
 			this.actual = actual;
@@ -69,7 +69,7 @@ final class FluxSkipLast<T> extends InternalFluxOperator<T, T> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.validate(this.s, s)) {
 				this.s = s;
 

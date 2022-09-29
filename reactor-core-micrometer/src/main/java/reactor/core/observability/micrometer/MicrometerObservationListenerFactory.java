@@ -17,13 +17,15 @@
 package reactor.core.observability.micrometer;
 
 import io.micrometer.observation.ObservationRegistry;
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 
 import reactor.core.observability.SignalListener;
 import reactor.core.observability.SignalListenerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.context.ContextView;
+
+import java.util.concurrent.Flow;
 
 /**
  * A {@link SignalListenerFactory} for {@link MicrometerObservationListener}.

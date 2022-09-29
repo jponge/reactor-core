@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,10 @@ package reactor.core.publisher;
 
 import java.util.Objects;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
@@ -132,7 +131,7 @@ final class MonoUsing<T, S> extends Mono<T> implements Fuseable, SourceProducer<
 		final boolean eager;
 		final boolean allowFusion;
 
-		Subscription         s;
+		Flow.Subscription s;
 		@Nullable
 		QueueSubscription<T> qs;
 
@@ -197,7 +196,7 @@ final class MonoUsing<T, S> extends Mono<T> implements Fuseable, SourceProducer<
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.validate(this.s, s)) {
 				this.s = s;
 				if (s instanceof QueueSubscription) {

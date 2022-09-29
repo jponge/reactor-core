@@ -20,14 +20,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.function.Function;
 
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssertAlternative;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
+
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Hooks;
 import reactor.test.DefaultStepVerifierBuilder.DefaultContextExpectations;
@@ -91,7 +92,7 @@ public class DefaultContextExpectationsTest {
 
 	@Test
 	public void notContextAccessibleDueToPublisher() {
-		Publisher<Integer> publisher = subscriber -> subscriber.onSubscribe(new Subscription() {
+		Flow.Publisher<Integer> publisher = subscriber -> subscriber.onSubscribe(new Subscription() {
 			@Override
 			public void request(long l) {
 				subscriber.onComplete();

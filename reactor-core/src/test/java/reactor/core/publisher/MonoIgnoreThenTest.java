@@ -27,7 +27,7 @@ import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 
 import reactor.core.Disposable;
 import reactor.core.Scannable;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2017-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,11 @@ package reactor.core.publisher;
 
 import java.time.Duration;
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
@@ -172,9 +171,9 @@ class MonoCacheTime<T> extends InternalMonoOperator<T, T> implements Runnable {
 
 		final MonoCacheTime<T> main;
 
-		volatile Subscription subscription;
-		static final AtomicReferenceFieldUpdater<CoordinatorSubscriber, Subscription> S =
-				AtomicReferenceFieldUpdater.newUpdater(CoordinatorSubscriber.class, Subscription.class, "subscription");
+		volatile Flow.Subscription subscription;
+		static final AtomicReferenceFieldUpdater<CoordinatorSubscriber, Flow.Subscription> S =
+				AtomicReferenceFieldUpdater.newUpdater(CoordinatorSubscriber.class, Flow.Subscription.class, "subscription");
 
 		volatile Operators.MonoSubscriber<T, T>[] subscribers;
 		static final AtomicReferenceFieldUpdater<CoordinatorSubscriber, Operators.MonoSubscriber[]> SUBSCRIBERS =
@@ -200,7 +199,7 @@ class MonoCacheTime<T> extends InternalMonoOperator<T, T> implements Runnable {
 		 * implemented for use in the main's STATE compareAndSet.
 		 */
 		@Override
-		public Subscription getSubscription() {
+		public Flow.Subscription getSubscription() {
 			throw new UnsupportedOperationException("illegal signal use");
 		}
 
@@ -287,7 +286,7 @@ class MonoCacheTime<T> extends InternalMonoOperator<T, T> implements Runnable {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.validate(subscription, s)) {
 				subscription = s;
 				s.request(Long.MAX_VALUE);

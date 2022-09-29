@@ -18,27 +18,25 @@ package reactor.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.Spliterators;
+import java.util.concurrent.Flow;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Scheduler.Worker;
 import reactor.util.annotation.Nullable;
 import reactor.util.function.Tuple2;
-import reactor.util.function.Tuples;
 
 /**
  * A Scannable component exposes state in a non strictly memory consistent way and
@@ -198,7 +196,7 @@ public interface Scannable {
 		/**
 		 * A {@link Long} attribute exposing the current pending demand of a downstream
 		 * component. Note that {@link Long#MAX_VALUE} indicates an unbounded (push-style)
-		 * demand as specified in {@link org.reactivestreams.Subscription#request(long)}.
+		 * demand as specified in {@link Flow.Subscription#request(long)}.
 		 */
 		public static final Attr<Long> REQUESTED_FROM_DOWNSTREAM = new Attr<>(0L);
 
@@ -407,10 +405,10 @@ public interface Scannable {
 	}
 
 	/**
-	 * Return a {@link Stream} navigating the {@link org.reactivestreams.Subscriber}
+	 * Return a {@link Stream} navigating the {@link Subscriber}
 	 * chain (downward). The current {@link Scannable} is not included.
 	 *
-	 * @return a {@link Stream} navigating the {@link org.reactivestreams.Subscriber}
+	 * @return a {@link Stream} navigating the {@link Subscriber}
 	 * chain (downward, current {@link Scannable} not included).
 	 */
 	default Stream<? extends Scannable> actuals() {
@@ -525,10 +523,10 @@ public interface Scannable {
 	}
 
 	/**
-	 * Return a {@link Stream} navigating the {@link org.reactivestreams.Subscription}
+	 * Return a {@link Stream} navigating the {@link Flow.Subscription}
 	 * chain (upward). The current {@link Scannable} is not included.
 	 *
-	 * @return a {@link Stream} navigating the {@link org.reactivestreams.Subscription}
+	 * @return a {@link Stream} navigating the {@link Flow.Subscription}
 	 * chain (upward, current {@link Scannable} not included).
 	 */
 	default Stream<? extends Scannable> parents() {

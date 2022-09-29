@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ package reactor.core.publisher;
 
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
-import org.reactivestreams.Publisher;
 import reactor.core.CoreSubscriber;
 
 /**
@@ -32,16 +32,16 @@ import reactor.core.CoreSubscriber;
  */
 final class FluxConcatIterable<T> extends Flux<T> implements SourceProducer<T> {
 
-	final Iterable<? extends Publisher<? extends T>> iterable;
+	final Iterable<? extends Flow.Publisher<? extends T>> iterable;
 
-	FluxConcatIterable(Iterable<? extends Publisher<? extends T>> iterable) {
+	FluxConcatIterable(Iterable<? extends Flow.Publisher<? extends T>> iterable) {
 		this.iterable = Objects.requireNonNull(iterable, "iterable");
 	}
 
 	@Override
 	public void subscribe(CoreSubscriber<? super T> actual) {
 
-		Iterator<? extends Publisher<? extends T>> it;
+		Iterator<? extends Flow.Publisher<? extends T>> it;
 
 		try {
 			it = Objects.requireNonNull(iterable.iterator(),
@@ -70,7 +70,7 @@ final class FluxConcatIterable<T> extends Flux<T> implements SourceProducer<T> {
 	static final class ConcatIterableSubscriber<T>
 			extends Operators.MultiSubscriptionSubscriber<T, T> {
 
-		final Iterator<? extends Publisher<? extends T>> it;
+		final Iterator<? extends Flow.Publisher<? extends T>> it;
 
 		volatile int wip;
 		@SuppressWarnings("rawtypes")
@@ -81,7 +81,7 @@ final class FluxConcatIterable<T> extends Flux<T> implements SourceProducer<T> {
 		long produced;
 
 		ConcatIterableSubscriber(CoreSubscriber<? super T> actual,
-				Iterator<? extends Publisher<? extends T>> it) {
+				Iterator<? extends Flow.Publisher<? extends T>> it) {
 			super(actual);
 			this.it = it;
 		}
@@ -96,7 +96,7 @@ final class FluxConcatIterable<T> extends Flux<T> implements SourceProducer<T> {
 		@Override
 		public void onComplete() {
 			if (WIP.getAndIncrement(this) == 0) {
-				Iterator<? extends Publisher<? extends T>> a = this.it;
+				Iterator<? extends Flow.Publisher<? extends T>> a = this.it;
 				do {
 					if (isCancelled()) {
 						return;
@@ -122,7 +122,7 @@ final class FluxConcatIterable<T> extends Flux<T> implements SourceProducer<T> {
 						return;
 					}
 
-					Publisher<? extends T> p;
+					Flow.Publisher<? extends T> p;
 
 					try {
 						p = Objects.requireNonNull(it.next(),

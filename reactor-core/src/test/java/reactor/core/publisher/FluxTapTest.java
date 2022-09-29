@@ -18,13 +18,14 @@ package reactor.core.publisher;
 
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Fuseable;
@@ -157,7 +158,7 @@ class FluxTapTest {
 
 		@Override
 		public SignalListener<T> createListener(Publisher<? extends T> source, ContextView listenerContext,
-													  Void publisherContext) {
+                                                Void publisherContext) {
 			return singleton;
 		}
 	}
@@ -492,7 +493,7 @@ class FluxTapTest {
 
 				@Override
 				public SignalListener<Integer> createListener(Publisher<? extends Integer> source,
-															  ContextView listenerContext, Void publisherContext) {
+                                                              ContextView listenerContext, Void publisherContext) {
 					throw new IllegalStateException("expected");
 				}
 			});
@@ -564,7 +565,7 @@ class FluxTapTest {
 
 					@Override
 					public SignalListener<Integer> createListener(Publisher<? extends Integer> source,
-																  ContextView listenerContext, Void publisherContext) {
+                                                                  ContextView listenerContext, Void publisherContext) {
 						throw new IllegalStateException("expected");
 					}
 				});
@@ -719,7 +720,7 @@ class FluxTapTest {
 
 					@Override
 					public SignalListener<Integer> createListener(Publisher<? extends Integer> source,
-																  ContextView listenerContext, Void publisherContext) {
+                                                                  ContextView listenerContext, Void publisherContext) {
 						throw new IllegalStateException("expected");
 					}
 				});
@@ -820,7 +821,7 @@ class FluxTapTest {
 
 					@Override
 					public SignalListener<Integer> createListener(Publisher<? extends Integer> source,
-																  ContextView listenerContext, Void publisherContext) {
+                                                                  ContextView listenerContext, Void publisherContext) {
 						throw new IllegalStateException("expected");
 					}
 				});

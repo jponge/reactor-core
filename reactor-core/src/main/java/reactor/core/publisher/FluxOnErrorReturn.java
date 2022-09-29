@@ -19,7 +19,7 @@ package reactor.core.publisher;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.function.Predicate;
 
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.util.annotation.Nullable;

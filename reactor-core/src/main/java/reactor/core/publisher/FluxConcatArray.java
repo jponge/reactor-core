@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,12 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
 import reactor.util.annotation.Nullable;
@@ -147,7 +148,7 @@ final class FluxConcatArray<T> extends Flux<T> implements SourceProducer<T> {
 	}
 
 	interface SubscriptionAware {
-		Subscription upstream();
+		Flow.Subscription upstream();
 	}
 	
 	static final class ConcatArraySubscriber<T> extends ThreadLocal<Object> implements InnerOperator<T, T>, SubscriptionAware {
@@ -157,7 +158,7 @@ final class FluxConcatArray<T> extends Flux<T> implements SourceProducer<T> {
 
 		int index;
 		long produced;
-		Subscription s;
+		Flow.Subscription s;
 
 		volatile long requested;
 		@SuppressWarnings("rawtypes")
@@ -172,14 +173,14 @@ final class FluxConcatArray<T> extends Flux<T> implements SourceProducer<T> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (this.cancelled) {
 				this.remove();
 				s.cancel();
 				return;
 			}
 
-			final Subscription previousSubscription = this.s;
+			final Flow.Subscription previousSubscription = this.s;
 
 			this.s = s;
 
@@ -267,7 +268,7 @@ final class FluxConcatArray<T> extends Flux<T> implements SourceProducer<T> {
 
 		@Override
 		public void request(long n) {
-			final Subscription subscription = addCapAndGetSubscription(n, REQUESTED, this);
+			final Flow.Subscription subscription = addCapAndGetSubscription(n, REQUESTED, this);
 
 			if (subscription == null) {
 				return;
@@ -288,7 +289,7 @@ final class FluxConcatArray<T> extends Flux<T> implements SourceProducer<T> {
 		}
 
 		@Override
-		public Subscription upstream() {
+		public Flow.Subscription upstream() {
 			return this.s;
 		}
 
@@ -315,7 +316,7 @@ final class FluxConcatArray<T> extends Flux<T> implements SourceProducer<T> {
 
 		int index;
 		long produced;
-		Subscription s;
+		Flow.Subscription s;
 
 		volatile long requested;
 		@SuppressWarnings("rawtypes")
@@ -335,14 +336,14 @@ final class FluxConcatArray<T> extends Flux<T> implements SourceProducer<T> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (this.cancelled) {
 				this.remove();
 				s.cancel();
 				return;
 			}
 
-			final Subscription previousSubscription = this.s;
+			final Flow.Subscription previousSubscription = this.s;
 
 			this.s = s;
 
@@ -452,7 +453,7 @@ final class FluxConcatArray<T> extends Flux<T> implements SourceProducer<T> {
 
 		@Override
 		public void request(long n) {
-			final Subscription subscription = addCapAndGetSubscription(n, REQUESTED, this);
+			final Flow.Subscription subscription = addCapAndGetSubscription(n, REQUESTED, this);
 
 			if (subscription == null) {
 				return;
@@ -478,7 +479,7 @@ final class FluxConcatArray<T> extends Flux<T> implements SourceProducer<T> {
 		}
 
 		@Override
-		public Subscription upstream() {
+		public Flow.Subscription upstream() {
 			return this.s;
 		}
 
@@ -527,10 +528,10 @@ final class FluxConcatArray<T> extends Flux<T> implements SourceProducer<T> {
 	}
 
 	@Nullable
-	static <T extends SubscriptionAware> Subscription addCapAndGetSubscription(long n, AtomicLongFieldUpdater<T> updater, T instance) {
+	static <T extends SubscriptionAware> Flow.Subscription addCapAndGetSubscription(long n, AtomicLongFieldUpdater<T> updater, T instance) {
 		for (;;) {
 			final long state = updater.get(instance);
-			final Subscription s = instance.upstream();
+			final Flow.Subscription s = instance.upstream();
 			final long actualRequested = state & Long.MAX_VALUE;
 			final long status = state & Long.MIN_VALUE;
 

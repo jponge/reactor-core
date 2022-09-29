@@ -17,10 +17,9 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.function.Function;
 
-import org.reactivestreams.Subscription;
-import reactor.core.CorePublisher;
 import reactor.core.CoreSubscriber;
 import reactor.core.Fuseable;
 import reactor.util.annotation.Nullable;
@@ -76,7 +75,7 @@ final class FluxMap<T, R> extends InternalFluxOperator<T, R> {
 
 		boolean done;
 
-		Subscription s;
+		Flow.Subscription s;
 
 		MapSubscriber(CoreSubscriber<? super R> actual,
 				Function<? super T, ? extends R> mapper) {
@@ -85,7 +84,7 @@ final class FluxMap<T, R> extends InternalFluxOperator<T, R> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.validate(this.s, s)) {
 				this.s = s;
 
@@ -178,7 +177,7 @@ final class FluxMap<T, R> extends InternalFluxOperator<T, R> {
 
 		boolean done;
 
-		Subscription s;
+		Flow.Subscription s;
 
 		MapConditionalSubscriber(Fuseable.ConditionalSubscriber<? super R> actual,
 				Function<? super T, ? extends R> mapper) {
@@ -187,7 +186,7 @@ final class FluxMap<T, R> extends InternalFluxOperator<T, R> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.validate(this.s, s)) {
 				this.s = s;
 

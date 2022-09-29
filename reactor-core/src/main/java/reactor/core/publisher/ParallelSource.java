@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@
 package reactor.core.publisher;
 
 import java.util.Queue;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongArray;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscriber;
+
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
 import reactor.core.Fuseable;
@@ -39,7 +39,7 @@ import reactor.util.context.Context;
  * @param <T> the value type
  */
 final class ParallelSource<T> extends ParallelFlux<T> implements Scannable {
-	final Publisher<? extends T> source;
+	final Flow.Publisher<? extends T> source;
 	
 	final int parallelism;
 	
@@ -47,7 +47,7 @@ final class ParallelSource<T> extends ParallelFlux<T> implements Scannable {
 	
 	final Supplier<Queue<T>> queueSupplier;
 
-	ParallelSource(Publisher<? extends T> source, int parallelism, int prefetch, Supplier<Queue<T>> queueSupplier) {
+	ParallelSource(Flow.Publisher<? extends T> source, int parallelism, int prefetch, Supplier<Queue<T>> queueSupplier) {
 		if (parallelism <= 0) {
 			throw new IllegalArgumentException("parallelism > 0 required but it was " + parallelism);
 		}
@@ -103,7 +103,7 @@ final class ParallelSource<T> extends ParallelFlux<T> implements Scannable {
 
 		final Supplier<Queue<T>> queueSupplier;
 
-		Subscription s;
+		Flow.Subscription s;
 		
 		Queue<T> queue;
 		
@@ -168,7 +168,7 @@ final class ParallelSource<T> extends ParallelFlux<T> implements Scannable {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.validate(this.s, s)) {
 				this.s = s;
 

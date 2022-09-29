@@ -19,10 +19,7 @@ package reactor.core.publisher;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
@@ -30,8 +27,6 @@ import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -256,10 +251,10 @@ class SinkManyEmitterProcessorTest {
 		List<Integer> list = new ArrayList<>();
 
 		processor.subscribe(new CoreSubscriber<Integer>() {
-			Subscription s;
+			Flow.Subscription s;
 
 			@Override
-			public void onSubscribe(Subscription s) {
+			public void onSubscribe(Flow.Subscription s) {
 				this.s = s;
 				s.request(1);
 			}
@@ -326,7 +321,7 @@ class SinkManyEmitterProcessorTest {
 	@Test
 	void subscribeNull() {
 		assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> {
-			new SinkManyEmitterProcessor<>(true, Queues.SMALL_BUFFER_SIZE).subscribe((Subscriber<Object>) null);
+			new SinkManyEmitterProcessor<>(true, Queues.SMALL_BUFFER_SIZE).subscribe((Flow.Subscriber<Object>) null);
 		});
 	}
 
@@ -734,10 +729,10 @@ class SinkManyEmitterProcessorTest {
 
 		assertThat(test.scan(BUFFERED)).isEqualTo(0);
 
-		AtomicReference<Subscription> d2 = new AtomicReference<>();
+		AtomicReference<Flow.Subscription> d2 = new AtomicReference<>();
 		test.subscribe(new CoreSubscriber<Integer>() {
 			@Override
-			public void onSubscribe(Subscription s) {
+			public void onSubscribe(Flow.Subscription s) {
 				d2.set(s);
 			}
 

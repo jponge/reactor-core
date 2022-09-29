@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 package reactor.core.publisher;
 
 import java.util.Arrays;
+import java.util.concurrent.Flow;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Publisher;
 import reactor.core.Scannable;
 import reactor.test.StepVerifier;
 import reactor.test.subscriber.AssertSubscriber;
@@ -113,7 +113,7 @@ public class MonoWhenTest {
 		Exception boom1 = new NullPointerException("boom1");
 		Exception boom2 = new IllegalArgumentException("boom2");
 
-		Iterable<Publisher<Void>> voidPublishers = Arrays.asList(
+		Iterable<Flow.Publisher<Void>> voidPublishers = Arrays.asList(
 				Mono.<Void>empty(),
 				Mono.<Void>error(boom1),
 				Mono.<Void>error(boom2));
@@ -129,7 +129,7 @@ public class MonoWhenTest {
 		Exception boom1 = new NullPointerException("boom1");
 		Exception boom2 = new IllegalArgumentException("boom2");
 
-		Iterable<Publisher<Void>> voidPublishers = Arrays.asList(
+		Iterable<Flow.Publisher<Void>> voidPublishers = Arrays.asList(
 				Mono.<Void>empty(),
 				Mono.<Void>error(boom1),
 				Mono.<Void>error(boom2));

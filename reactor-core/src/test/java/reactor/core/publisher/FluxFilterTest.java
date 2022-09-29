@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Fuseable;
@@ -275,7 +275,7 @@ public class FluxFilterTest extends FluxOperatorTest<String, String> {
     public void scanSubscriber() {
         CoreSubscriber<String> actual = new LambdaSubscriber<>(null, e -> {}, null, null);
         FilterSubscriber<String> test = new FilterSubscriber<>(actual, t -> true);
-        Subscription parent = Operators.emptySubscription();
+        Flow.Subscription parent = Operators.emptySubscription();
         test.onSubscribe(parent);
 
         assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(parent);
@@ -292,7 +292,7 @@ public class FluxFilterTest extends FluxOperatorTest<String, String> {
 	    @SuppressWarnings("unchecked")
 	    Fuseable.ConditionalSubscriber<String> actual = Mockito.mock(MockUtils.TestScannableConditionalSubscriber.class);
         FilterConditionalSubscriber<String> test = new FilterConditionalSubscriber<>(actual, t -> true);
-        Subscription parent = Operators.emptySubscription();
+        Flow.Subscription parent = Operators.emptySubscription();
         test.onSubscribe(parent);
 
         assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(parent);

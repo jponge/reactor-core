@@ -28,10 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReference;
@@ -46,9 +43,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -899,7 +895,7 @@ final class DefaultStepVerifierBuilder<T>
 		}
 
 		/**
-		 * Converts the {@link StepVerifier} to a {@link Subscriber}, leaving all the
+		 * Converts the {@link StepVerifier} to a {@link Flow.Subscriber}, leaving all the
 		 * lifecycle management to the user. Most notably:
 		 * <ul>
 		 *     <li>no subscription is performed

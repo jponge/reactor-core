@@ -21,6 +21,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -31,7 +32,6 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.api.LongAssert;
 import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
@@ -262,7 +262,7 @@ public class FluxRetryWhenTest {
 		justError.retryWhen(Retry.from(other -> when))
 		         .subscribe(new BaseSubscriber<Integer>() {
 			         @Override
-			         protected void hookOnSubscribe(Subscription subscription) {
+			         protected void hookOnSubscribe(Flow.Subscription subscription) {
 				         subscription.request(1);
 				         subscription.cancel();
 				         subscription.cancel();
@@ -547,7 +547,7 @@ public class FluxRetryWhenTest {
         CoreSubscriber<Integer> actual = new LambdaSubscriber<>(null, e -> {}, null, null);
         FluxRetryWhen.RetryWhenMainSubscriber<Integer> test =
         		new FluxRetryWhen.RetryWhenMainSubscriber<>(actual, null, Flux.empty(), Context.empty());
-        Subscription parent = Operators.emptySubscription();
+        Flow.Subscription parent = Operators.emptySubscription();
         test.onSubscribe(parent);
 
         Assertions.assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(parent);

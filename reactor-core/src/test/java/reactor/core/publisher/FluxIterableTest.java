@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Spliterator;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -32,8 +33,7 @@ import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.mockito.Mockito;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscriber;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Fuseable;
@@ -372,7 +372,7 @@ public class FluxIterableTest {
 		CountDownLatch terminated = new CountDownLatch(1);
 		Subscriber<Integer> simpleAsyncSubscriber = new BaseSubscriber<Integer>() {
 			@Override
-			protected void hookOnSubscribe(Subscription subscription) {
+			protected void hookOnSubscribe(Flow.Subscription subscription) {
 				request(1);
 			}
 

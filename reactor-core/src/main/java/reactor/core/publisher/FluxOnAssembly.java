@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,27 +20,23 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
+import java.util.concurrent.Flow;
 import java.util.function.Supplier;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
 import reactor.core.Fuseable;
 import reactor.core.Scannable;
 import reactor.util.annotation.Nullable;
-import reactor.util.function.Tuple3;
-import reactor.util.function.Tuples;
 
 /**
  * Captures the current stacktrace when this publisher is created and
@@ -491,12 +487,12 @@ final class FluxOnAssembly<T> extends InternalFluxOperator<T, T> implements Fuse
 			implements InnerOperator<T, T>, QueueSubscription<T> {
 
 		final AssemblySnapshot          snapshotStack;
-		final Publisher<?>              parent;
-		final Publisher<?>              current;
+		final Publisher<?> parent;
+		final Publisher<?> current;
 		final CoreSubscriber<? super T> actual;
 
 		QueueSubscription<T> qs;
-		Subscription         s;
+		Subscription s;
 		int                  fusionMode;
 
 		OnAssemblySubscriber(CoreSubscriber<? super T> actual,

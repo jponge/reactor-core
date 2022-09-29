@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
 
 package reactor.core.publisher;
 
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.util.annotation.Nullable;
 import reactor.util.context.Context;
@@ -71,7 +70,7 @@ final class FluxOnBackpressureLatest<T> extends InternalFluxOperator<T, T> {
 		static final AtomicIntegerFieldUpdater<LatestSubscriber> WIP =
 		  AtomicIntegerFieldUpdater.newUpdater(LatestSubscriber.class, "wip");
 
-		Subscription s;
+		Flow.Subscription s;
 
 		Throwable error;
 		volatile boolean done;
@@ -115,7 +114,7 @@ final class FluxOnBackpressureLatest<T> extends InternalFluxOperator<T, T> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.validate(this.s, s)) {
 				this.s = s;
 
@@ -151,7 +150,7 @@ final class FluxOnBackpressureLatest<T> extends InternalFluxOperator<T, T> {
 			if (WIP.getAndIncrement(this) != 0) {
 				return;
 			}
-			final Subscriber<? super T> a = actual;
+			final Flow.Subscriber<? super T> a = actual;
 
 			int missed = 1;
 
@@ -200,7 +199,7 @@ final class FluxOnBackpressureLatest<T> extends InternalFluxOperator<T, T> {
 			}
 		}
 
-		boolean checkTerminated(boolean d, boolean empty, Subscriber<? super T> a) {
+		boolean checkTerminated(boolean d, boolean empty, Flow.Subscriber<? super T> a) {
 			if (cancelled) {
 				Object toDiscard = VALUE.getAndSet(this, null);
 				if (toDiscard != null) {

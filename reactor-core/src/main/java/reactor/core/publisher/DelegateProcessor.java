@@ -17,11 +17,10 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.stream.Stream;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
@@ -35,10 +34,10 @@ import reactor.util.context.Context;
 final class DelegateProcessor<IN, OUT> extends FluxProcessor<IN, OUT> {
 
 	final Publisher<OUT> downstream;
-	final Subscriber<IN> upstream;
+	final Flow.Subscriber<IN> upstream;
 
 	DelegateProcessor(Publisher<OUT> downstream,
-			Subscriber<IN> upstream) {
+                      Flow.Subscriber<IN> upstream) {
 		this.downstream = Objects.requireNonNull(downstream, "Downstream must not be null");
 		this.upstream = Objects.requireNonNull(upstream, "Upstream must not be null");
 	}
@@ -67,7 +66,7 @@ final class DelegateProcessor<IN, OUT> extends FluxProcessor<IN, OUT> {
 	}
 
 	@Override
-	public void onSubscribe(Subscription s) {
+	public void onSubscribe(Flow.Subscription s) {
 		upstream.onSubscribe(s);
 	}
 

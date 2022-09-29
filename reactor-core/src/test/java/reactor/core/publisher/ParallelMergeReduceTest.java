@@ -17,9 +17,9 @@
 package reactor.core.publisher;
 
 import java.time.Duration;
+import java.util.concurrent.Flow;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.core.publisher.ParallelMergeReduce.MergeReduceInner;
@@ -143,7 +143,7 @@ public class ParallelMergeReduceTest {
 				subscriber, 2, (a, b) -> a + b);
 		MergeReduceInner<Integer> test = new MergeReduceInner<>(main, (a, b) -> a + b);
 
-		Subscription s = Operators.emptySubscription();
+		Flow.Subscription s = Operators.emptySubscription();
 		test.onSubscribe(s);
 
 		assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(s);

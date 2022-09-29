@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2021-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,10 @@
 
 package reactor.test.subscriber;
 
+import java.util.concurrent.Flow;
 import java.util.function.Predicate;
 
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.Fuseable;
 import reactor.util.context.Context;
@@ -77,8 +78,8 @@ public final class TestSubscriberBuilder {
 	}
 
 	/**
-	 * Set the request to be made upon receiving the {@link org.reactivestreams.Subscription}
-	 * in {@link org.reactivestreams.Subscriber#onSubscribe(Subscription)}. Default is {@link Long#MAX_VALUE}.
+	 * Set the request to be made upon receiving the {@link Subscription}
+	 * in {@link Flow.Subscriber#onSubscribe(Subscription)}. Default is {@link Long#MAX_VALUE}.
 	 *
 	 * @param initialRequest the request to be made at subscription
 	 * @return this builder, mutated to reflect the new request to be made at subscription
@@ -89,8 +90,8 @@ public final class TestSubscriberBuilder {
 	}
 
 	/**
-	 * Set the request to be made upon receiving the {@link org.reactivestreams.Subscription}
-	 * in {@link org.reactivestreams.Subscriber#onSubscribe(Subscription)} to be an
+	 * Set the request to be made upon receiving the {@link Subscription}
+	 * in {@link Flow.Subscriber#onSubscribe(Subscription)} to be an
 	 * unbounded request, ie. {@link Long#MAX_VALUE}.
 	 *
 	 * @return this builder, mutated to reflect an unbounded request is to be made at subscription

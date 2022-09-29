@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2021-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,11 @@ package reactor.core.publisher;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.function.Predicate;
 
-import org.reactivestreams.Subscription;
-
 import reactor.core.CoreSubscriber;
-import reactor.util.Logger;
-import reactor.util.Loggers;
 import reactor.util.annotation.Nullable;
 import reactor.util.context.Context;
 
@@ -189,10 +186,10 @@ final class MonoCacheInvalidateIf<T> extends InternalMonoOperator<T, T> {
 		//no need for volatile: only used in onNext/onError/onComplete
 		boolean done = false;
 
-		volatile Subscription upstream;
+		volatile Flow.Subscription upstream;
 		@SuppressWarnings("rawtypes")
-		static final AtomicReferenceFieldUpdater<CoordinatorSubscriber, Subscription> UPSTREAM =
-				AtomicReferenceFieldUpdater.newUpdater(CoordinatorSubscriber.class, Subscription.class, "upstream");
+		static final AtomicReferenceFieldUpdater<CoordinatorSubscriber, Flow.Subscription> UPSTREAM =
+				AtomicReferenceFieldUpdater.newUpdater(CoordinatorSubscriber.class, Flow.Subscription.class, "upstream");
 
 
 		volatile     CacheMonoSubscriber<T>[]                                                  subscribers;
@@ -290,7 +287,7 @@ final class MonoCacheInvalidateIf<T> extends InternalMonoOperator<T, T> {
 		}
 
 		void delayedSubscribe() {
-			Subscription old = UPSTREAM.getAndSet(this, null);
+			Flow.Subscription old = UPSTREAM.getAndSet(this, null);
 			if (old != null && old != Operators.cancelledSubscription()) {
 				old.cancel();
 			}
@@ -298,7 +295,7 @@ final class MonoCacheInvalidateIf<T> extends InternalMonoOperator<T, T> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			//this only happens if there was at least one incoming subscriber
 			if (UPSTREAM.compareAndSet(this, null, s)) {
 				s.request(Long.MAX_VALUE);

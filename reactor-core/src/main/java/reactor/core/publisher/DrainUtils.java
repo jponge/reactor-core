@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package reactor.core.publisher;
 
 import java.util.Queue;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.function.BooleanSupplier;
 
-import org.reactivestreams.Subscriber;
 import reactor.core.CoreSubscriber;
 import reactor.util.annotation.Nullable;
 
@@ -49,7 +49,7 @@ abstract class DrainUtils {
 	 * @return true if the state indicates a completion state.
 	 */
 	static <T, F> boolean postCompleteRequest(long n,
-			Subscriber<? super T> actual,
+			Flow.Subscriber<? super T> actual,
 			Queue<T> queue,
 			AtomicLongFieldUpdater<F> field,
 			F instance,
@@ -91,7 +91,7 @@ abstract class DrainUtils {
 	 * @return true if the queue was completely drained or the drain process was cancelled
 	 */
 	static <T, F> boolean postCompleteDrain(long n,
-			Subscriber<? super T> actual,
+			Flow.Subscriber<? super T> actual,
 			Queue<T> queue,
 			AtomicLongFieldUpdater<F> field,
 			F instance,
@@ -223,7 +223,7 @@ abstract class DrainUtils {
      * @return true if the state indicates a completion state.
      */
     public static <T, F> boolean postCompleteRequestDelayError(long n,
-            Subscriber<? super T> actual,
+            Flow.Subscriber<? super T> actual,
             Queue<T> queue,
             AtomicLongFieldUpdater<F> field,
             F instance,
@@ -267,7 +267,7 @@ abstract class DrainUtils {
      * @return true if the queue was completely drained or the drain process was cancelled
      */
     static <T, F> boolean postCompleteDrainDelayError(long n,
-            Subscriber<? super T> actual,
+            Flow.Subscriber<? super T> actual,
             Queue<T> queue,
             AtomicLongFieldUpdater<F> field,
             F instance,

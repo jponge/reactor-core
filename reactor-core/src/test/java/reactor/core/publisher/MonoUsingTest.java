@@ -17,6 +17,7 @@
 package reactor.core.publisher;
 
 import java.time.Duration;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,7 +25,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.test.StepVerifier;
@@ -372,7 +372,7 @@ public class MonoUsingTest {
 		CoreSubscriber<Integer> actual = new LambdaSubscriber<>(null, e -> {}, null, null);
 		MonoUsing.MonoUsingSubscriber<Integer, ?> test = new MonoUsing.MonoUsingSubscriber<>(actual, rc -> {}, "foo", false, false);
 
-		final Subscription parent = Operators.emptySubscription();
+		final Flow.Subscription parent = Operators.emptySubscription();
 		test.onSubscribe(parent);
 
 		assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(parent);

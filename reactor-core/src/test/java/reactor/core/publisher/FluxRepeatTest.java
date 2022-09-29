@@ -18,11 +18,11 @@ package reactor.core.publisher;
 
 import java.time.Duration;
 import java.util.UUID;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.test.StepVerifier;
@@ -210,7 +210,7 @@ public class FluxRepeatTest {
 		CoreSubscriber<Integer> actual = new LambdaSubscriber<>(null, e -> {}, null, null);
 		FluxRepeat.RepeatSubscriber<Integer> test = new FluxRepeat.RepeatSubscriber<>(source, actual, 3);
 
-		Subscription parent = Operators.emptySubscription();
+		Flow.Subscription parent = Operators.emptySubscription();
 		test.onSubscribe(parent);
 
 		assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(parent);

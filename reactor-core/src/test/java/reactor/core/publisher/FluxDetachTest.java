@@ -18,12 +18,13 @@ package reactor.core.publisher;
 
 import java.lang.ref.WeakReference;
 import java.time.Duration;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscriber;
+
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.test.subscriber.AssertSubscriber;
@@ -194,7 +195,7 @@ public class FluxDetachTest {
 		CoreSubscriber<String> actual = new LambdaSubscriber<>(null, e -> {
 		}, null, null);
 		FluxDetach.DetachSubscriber<String> test = new FluxDetach.DetachSubscriber<>(actual);
-		Subscription parent = Operators.emptySubscription();
+		Flow.Subscription parent = Operators.emptySubscription();
 		test.onSubscribe(parent);
 
 		assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(parent);
@@ -214,7 +215,7 @@ public class FluxDetachTest {
 	public void scanSubscriberCancelled() {
 		CoreSubscriber<String> actual = new LambdaSubscriber<>(null, e -> {}, null, null);
 		FluxDetach.DetachSubscriber<String> test = new FluxDetach.DetachSubscriber<>(actual);
-		Subscription parent = Operators.emptySubscription();
+		Flow.Subscription parent = Operators.emptySubscription();
 		test.onSubscribe(parent);
 
 		assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(parent);

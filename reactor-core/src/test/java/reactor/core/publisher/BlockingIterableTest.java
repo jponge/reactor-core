@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,17 @@ package reactor.core.publisher;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Flow;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.reactivestreams.Subscription;
 import reactor.core.Scannable;
 import reactor.core.Scannable.Attr;
 import reactor.test.StepVerifier;
@@ -170,7 +169,7 @@ public class BlockingIterableTest {
 	public void scanSubscriber() {
 		BlockingIterable.SubscriberIterator<String> subscriberIterator =
 				new BlockingIterable.SubscriberIterator<>(Queues.<String>one().get(), 123);
-		Subscription s = Operators.emptySubscription();
+		Flow.Subscription s = Operators.emptySubscription();
 		subscriberIterator.onSubscribe(s);
 
 		assertThat(subscriberIterator.scan(Scannable.Attr.PARENT)).describedAs("PARENT")

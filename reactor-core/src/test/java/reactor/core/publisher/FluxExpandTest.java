@@ -21,14 +21,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.core.publisher.FluxExpand.ExpandBreathSubscriber;
@@ -376,10 +377,10 @@ public class FluxExpandTest {
 		final AssertSubscriber<Integer> ts = AssertSubscriber.create();
 		CoreSubscriber<Integer> s = new CoreSubscriber<Integer>() {
 
-			Subscription upstream;
+			Flow.Subscription upstream;
 
 			@Override
-			public void onSubscribe(Subscription s) {
+			public void onSubscribe(Flow.Subscription s) {
 				upstream = s;
 				ts.onSubscribe(s);
 			}
@@ -562,7 +563,7 @@ public class FluxExpandTest {
 		ExpandBreathSubscriber<Integer> test = new ExpandBreathSubscriber<>(actual,
 				i -> i > 5 ? Mono.empty() : Mono.just(i + 1), 123);
 
-		Subscription s = Operators.emptySubscription();
+		Flow.Subscription s = Operators.emptySubscription();
 		test.onSubscribe(s);
 
 		assertThat(test.scan(Scannable.Attr.PARENT)).isEqualTo(s);
@@ -589,7 +590,7 @@ public class FluxExpandTest {
 				parentActual, i -> i > 5 ? Mono.empty() : Mono.just(i + 1), 123);
 		ExpandDepthSubscriber<Integer> test = new ExpandDepthSubscriber<>(eds);
 
-		Subscription s = Operators.emptySubscription();
+		Flow.Subscription s = Operators.emptySubscription();
 		test.onSubscribe(s);
 
 		assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(s);

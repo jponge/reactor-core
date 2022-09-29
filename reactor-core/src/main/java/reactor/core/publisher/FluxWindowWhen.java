@@ -20,14 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -121,8 +122,8 @@ final class FluxWindowWhen<T, U, V> extends InternalFluxOperator<T, Flux<T>> {
 				AtomicLongFieldUpdater.newUpdater(WindowWhenMainSubscriber.class, "openWindowCount");
 
 		WindowWhenMainSubscriber(CoreSubscriber<? super Flux<T>> actual,
-				Publisher<U> open, Function<? super U, ? extends Publisher<V>> close,
-				Supplier<? extends Queue<T>> processorQueueSupplier) {
+                                 Publisher<U> open, Function<? super U, ? extends Publisher<V>> close,
+                                 Supplier<? extends Queue<T>> processorQueueSupplier) {
 			super(actual, Queues.unboundedMultiproducer().get());
 			this.open = open;
 			this.close = close;

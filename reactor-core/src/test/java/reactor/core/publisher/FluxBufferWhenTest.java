@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
@@ -35,7 +36,6 @@ import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
@@ -382,7 +382,7 @@ public class FluxBufferWhenTest {
 		}, null, null);
 
 		BufferWhenMainSubscriber<String, Integer, Long, List<String>> test = new BufferWhenMainSubscriber<String, Integer, Long, List<String>>(actual, ArrayList::new, Queues.small(), Mono.just(1), u -> Mono.just(1L));
-		Subscription parent = Operators.emptySubscription();
+		Flow.Subscription parent = Operators.emptySubscription();
 		test.onSubscribe(parent);
 		test.request(100L);
 
@@ -405,7 +405,7 @@ public class FluxBufferWhenTest {
 		}, null, null);
 
 		BufferWhenMainSubscriber<String, Integer, Long, List<String>> test = new BufferWhenMainSubscriber<String, Integer, Long, List<String>>(actual, ArrayList::new, Queues.small(), Mono.just(1), u -> Mono.just(1L));
-		Subscription parent = Operators.emptySubscription();
+		Flow.Subscription parent = Operators.emptySubscription();
 		test.onSubscribe(parent);
 		test.cancel();
 		assertThat(test.scan(Scannable.Attr.CANCELLED)).isTrue();
@@ -417,7 +417,7 @@ public class FluxBufferWhenTest {
 		}, null, null);
 
 		BufferWhenMainSubscriber<String, Integer, Long, List<String>> test = new BufferWhenMainSubscriber<String, Integer, Long, List<String>>(actual, ArrayList::new, Queues.small(), Mono.just(1), u -> Mono.just(1L));
-		Subscription parent = Operators.emptySubscription();
+		Flow.Subscription parent = Operators.emptySubscription();
 		test.onSubscribe(parent);
 		assertThat(test.scan(Scannable.Attr.TERMINATED)).isFalse();
 
@@ -436,7 +436,7 @@ public class FluxBufferWhenTest {
 
 		assertThat(test.scan(Scannable.Attr.REQUESTED_FROM_DOWNSTREAM)).isEqualTo(Long.MAX_VALUE);
 
-		Subscription parent = Operators.emptySubscription();
+		Flow.Subscription parent = Operators.emptySubscription();
 		test.onSubscribe(parent);
 
 		assertThat(test.scan(Scannable.Attr.ACTUAL)).isSameAs(main);
@@ -458,7 +458,7 @@ public class FluxBufferWhenTest {
 		FluxBufferWhen.BufferWhenOpenSubscriber test = new FluxBufferWhen.BufferWhenOpenSubscriber<>(main);
 
 
-		Subscription parent = Operators.emptySubscription();
+		Flow.Subscription parent = Operators.emptySubscription();
 		test.onSubscribe(parent);
 
 		assertThat(test.scan(Scannable.Attr.REQUESTED_FROM_DOWNSTREAM)).isEqualTo(Long.MAX_VALUE);

@@ -19,7 +19,7 @@ package reactor.core.publisher;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;

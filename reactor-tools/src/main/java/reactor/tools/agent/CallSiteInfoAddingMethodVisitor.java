@@ -39,7 +39,7 @@ import net.bytebuddy.jar.asm.Type;
  */
 class CallSiteInfoAddingMethodVisitor extends MethodVisitor {
 
-    static final String ADD_CALLSITE_INFO_METHOD = "(Lorg/reactivestreams/Publisher;Ljava/lang/String;)Lorg/reactivestreams/Publisher;";
+    static final String ADD_CALLSITE_INFO_METHOD = "(Ljava/util/concurrent/Flow$Publisher;Ljava/lang/String;)Ljava/util/concurrent/Flow$Publisher;";
 
     /**
      * Determine if a class (in the {@code com/package/ClassName} format) can be considered a CorePublisher.

@@ -17,11 +17,10 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.stream.Stream;
-
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
@@ -29,7 +28,7 @@ import reactor.core.publisher.Sinks.EmitResult;
 import reactor.util.annotation.Nullable;
 import reactor.util.context.Context;
 
-final class SinkManyUnicastNoBackpressure<T> extends Flux<T> implements InternalManySink<T>, Subscription, ContextHolder {
+final class SinkManyUnicastNoBackpressure<T> extends Flux<T> implements InternalManySink<T>, Flow.Subscription, ContextHolder {
 
 	public static <E> SinkManyUnicastNoBackpressure<E> create() {
 		return new SinkManyUnicastNoBackpressure<>();

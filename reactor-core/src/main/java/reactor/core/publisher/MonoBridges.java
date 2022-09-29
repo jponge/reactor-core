@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,8 @@
 
 package reactor.core.publisher;
 
+import java.util.concurrent.Flow;
 import java.util.function.Function;
-
-import org.reactivestreams.Publisher;
 
 /**
  * Utilities to avoid vararg array copying overhead when relaying vararg parameters
@@ -36,7 +35,7 @@ final class MonoBridges {
         return Mono.zip(combinator, monos);
     }
 
-    static Mono<Void> when(Publisher<?>[] sources) {
+    static Mono<Void> when(Flow.Publisher<?>[] sources) {
         return Mono.when(sources);
     }
 }

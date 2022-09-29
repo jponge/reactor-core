@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package reactor.core.publisher;
 
 import java.util.Queue;
+import java.util.concurrent.Flow;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.reactivestreams.Publisher;
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.util.annotation.Nullable;
@@ -35,7 +35,7 @@ final class ParallelFlatMap<T, R> extends ParallelFlux<R> implements Scannable{
 
 	final ParallelFlux<T> source;
 	
-	final Function<? super T, ? extends Publisher<? extends R>> mapper;
+	final Function<? super T, ? extends Flow.Publisher<? extends R>> mapper;
 	
 	final boolean delayError;
 	
@@ -49,7 +49,7 @@ final class ParallelFlatMap<T, R> extends ParallelFlux<R> implements Scannable{
 
 	ParallelFlatMap(
 			ParallelFlux<T> source,
-			Function<? super T, ? extends Publisher<? extends R>> mapper,
+			Function<? super T, ? extends Flow.Publisher<? extends R>> mapper,
 			boolean delayError, 
 			int maxConcurrency, Supplier<? extends Queue<R>> mainQueueSupplier, 
 			int prefetch, Supplier<? extends Queue<R>> innerQueueSupplier) {

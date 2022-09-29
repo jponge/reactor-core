@@ -20,10 +20,10 @@
  * utilities.
  *
  * <h2>Flux</h2>
- * A typed N-elements or zero sequence {@link org.reactivestreams.Publisher} with core reactive extensions.
+ * A typed N-elements or zero sequence {@link java.util.concurrent.Flow.Publisher} with core reactive extensions.
  *
  * <h2>Mono</h2>
- * A typed one-element at most sequence {@link org.reactivestreams.Publisher} with core reactive extensions.
+ * A typed one-element at most sequence {@link java.util.concurrent.Flow.Publisher} with core reactive extensions.
  **
  * @author Stephane Maldini
  */

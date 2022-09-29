@@ -16,7 +16,7 @@
 
 package reactor.core.publisher;
 
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;

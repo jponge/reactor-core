@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2021-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,9 @@ package reactor.test.subscriber;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.Flow;
 
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Fuseable;
@@ -29,19 +30,19 @@ import reactor.util.annotation.Nullable;
 import reactor.util.context.Context;
 
 /**
- * A {@link CoreSubscriber} that can be attached to any {@link org.reactivestreams.Publisher} to later assert which
+ * A {@link CoreSubscriber} that can be attached to any {@link Flow.Publisher} to later assert which
  * events occurred at runtime. This can be used as an alternative to {@link reactor.test.StepVerifier}
  * for more complex scenarios, e.g. more than one possible outcome, racing...
  * <p>
  * The subscriber can be fine tuned with a {@link #builder()}, which also allows to produce a {@link reactor.core.Fuseable.ConditionalSubscriber}
  * variant if needed.
  * <p>
- * {@link org.reactivestreams.Subscriber}-inherited methods never throw, but a few failure conditions might be met, which
+ * {@link Flow.Subscriber}-inherited methods never throw, but a few failure conditions might be met, which
  * fall into two categories.
  * <p>
  * The first category are "protocol errors": when the occurrence of an incoming signal doesn't follow the Reactive Streams
  * specification. The case must be covered explicitly in the specification, and leads to the signal being added to the
- * {@link #getProtocolErrors()} list. All protocol errors imply that the {@link org.reactivestreams.Publisher} has terminated
+ * {@link #getProtocolErrors()} list. All protocol errors imply that the {@link Flow.Publisher} has terminated
  * already. The list of detected protocol errors is:
  * <ul>
  *     <li>the {@link TestSubscriber} has already terminated (onComplete or onError), but an {@link #onNext(Object)} is received: onNext signal added to protocol errors</li>
@@ -86,14 +87,14 @@ public interface TestSubscriber<T> extends CoreSubscriber<T>, Scannable {
 	}
 
 	/**
-	 * Cancel the underlying subscription to the {@link org.reactivestreams.Publisher} and
+	 * Cancel the underlying subscription to the {@link Flow.Publisher} and
 	 * unblock any pending {@link #block()} calls.
 	 */
 	void cancel();
 
 	/**
-	 * Request {@code n} elements from the {@link org.reactivestreams.Publisher}'s {@link Subscription}.
-	 * If this method is called before the {@link TestSubscriber} has subscribed to the {@link org.reactivestreams.Publisher},
+	 * Request {@code n} elements from the {@link Flow.Publisher}'s {@link Subscription}.
+	 * If this method is called before the {@link TestSubscriber} has subscribed to the {@link Flow.Publisher},
 	 * pre-request is accumulated (including {@link TestSubscriberBuilder#initialRequest(long) configured initial request}
 	 * and replayed in a single batch upon subscription.
 	 * <p>
@@ -260,14 +261,14 @@ public interface TestSubscriber<T> extends CoreSubscriber<T>, Scannable {
 	List<T> getReceivedOnNextAfterCancellation();
 
 	/**
-	 * Return a {@link List} of {@link Signal} which represent detected protocol error from the source {@link org.reactivestreams.Publisher},
+	 * Return a {@link List} of {@link Signal} which represent detected protocol error from the source {@link Flow.Publisher},
 	 * that is to say signals that were emitted to this {@link TestSubscriber} in violation of the Reactive Streams
 	 * specification. An example would be an {@link #onNext(Object)} signal emitted after an {@link #onComplete()} signal.
 	 * <p>
 	 * Note that the {@link Signal} in the collection don't bear any {@link reactor.util.context.ContextView},
 	 * since they would all be the configured {@link #currentContext()}.
 	 *
-	 * @return a {@link List} of {@link Signal} representing the detected protocol errors from the source {@link org.reactivestreams.Publisher}
+	 * @return a {@link List} of {@link Signal} representing the detected protocol errors from the source {@link Flow.Publisher}
 	 *
 	 * @throws AssertionError in case of failure at subscription time
 	 */
@@ -277,7 +278,7 @@ public interface TestSubscriber<T> extends CoreSubscriber<T>, Scannable {
 	 * Return an {@code int} code that represents the negotiated fusion mode for this {@link TestSubscriber}.
 	 * Fusion codes can be converted to a human-readable value for display via {@link Fuseable#fusionModeName(int)}.
 	 * If no particular fusion has been requested, returns {@link Fuseable#NONE}.
-	 * Note that as long as this {@link TestSubscriber} hasn't been subscribed to a {@link org.reactivestreams.Publisher},
+	 * Note that as long as this {@link TestSubscriber} hasn't been subscribed to a {@link Flow.Publisher},
 	 * this method will return {@code -1}. It will also throw an {@link AssertionError} if the configured fusion mode
 	 * couldn't be negotiated at subscription.
 	 *
@@ -316,17 +317,17 @@ public interface TestSubscriber<T> extends CoreSubscriber<T>, Scannable {
 	public enum FusionRequirement {
 
 		/**
-		 * The parent {@link org.reactivestreams.Publisher} is expected to be fuseable, and this is
+		 * The parent {@link Flow.Publisher} is expected to be fuseable, and this is
 		 * verified by checking the {@link Subscription} it provides is a {@link reactor.core.Fuseable.QueueSubscription}.
 		 */
 		FUSEABLE,
 		/**
-		 * The parent {@link org.reactivestreams.Publisher} is expected to NOT be fuseable, and this is
+		 * The parent {@link Flow.Publisher} is expected to NOT be fuseable, and this is
 		 * verified by checking the {@link Subscription} it provides is NOT a {@link reactor.core.Fuseable.QueueSubscription}.
 		 */
 		NOT_FUSEABLE,
 		/**
-		 * There is no particular interest in the fuseability of the parent {@link org.reactivestreams.Publisher},
+		 * There is no particular interest in the fuseability of the parent {@link Flow.Publisher},
 		 * so even if it provides a {@link reactor.core.Fuseable.QueueSubscription} it will be used as a
 		 * vanilla {@link Subscription}.
 		 */

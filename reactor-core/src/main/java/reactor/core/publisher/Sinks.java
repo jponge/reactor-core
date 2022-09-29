@@ -18,9 +18,10 @@ package reactor.core.publisher;
 
 import java.time.Duration;
 import java.util.Queue;
+import java.util.concurrent.Flow;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
 
 import reactor.core.Disposable;
 import reactor.core.Exceptions;

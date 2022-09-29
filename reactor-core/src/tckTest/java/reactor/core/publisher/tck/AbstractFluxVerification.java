@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,10 @@ package reactor.core.publisher.tck;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 import org.reactivestreams.tck.TestEnvironment;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

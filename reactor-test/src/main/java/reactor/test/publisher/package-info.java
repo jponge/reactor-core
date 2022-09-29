@@ -16,7 +16,7 @@
 
 /**
  * Components supporting the creation of test-oriented
- * {@link org.reactivestreams.Publisher Publishers}.
+ * {@link java.util.concurrent.Flow.Publisher Publishers}.
  */
 @NonNullApi
 package reactor.test.publisher;

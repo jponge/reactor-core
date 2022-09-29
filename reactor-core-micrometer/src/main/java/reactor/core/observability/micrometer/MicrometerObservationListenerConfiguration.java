@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import io.micrometer.common.KeyValue;
 import io.micrometer.common.KeyValues;
 import io.micrometer.observation.ObservationRegistry;
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 
 import reactor.core.Scannable;
 import reactor.core.publisher.Flux;

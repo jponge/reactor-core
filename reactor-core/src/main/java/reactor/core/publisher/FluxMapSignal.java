@@ -18,13 +18,12 @@ package reactor.core.publisher;
 
 import java.util.AbstractQueue;
 import java.util.Iterator;
-import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.util.annotation.Nullable;
 
@@ -91,7 +90,7 @@ final class FluxMapSignal<T, R> extends InternalFluxOperator<T, R> {
 
         boolean done;
 
-        Subscription s;
+        Flow.Subscription s;
         
         R value;
         
@@ -115,7 +114,7 @@ final class FluxMapSignal<T, R> extends InternalFluxOperator<T, R> {
         }
 
         @Override
-        public void onSubscribe(Subscription s) {
+        public void onSubscribe(Flow.Subscription s) {
             if (Operators.validate(this.s, s)) {
                 this.s = s;
 

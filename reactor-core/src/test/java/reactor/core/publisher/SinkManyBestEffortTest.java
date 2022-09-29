@@ -18,7 +18,6 @@ package reactor.core.publisher;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 
 import reactor.core.Disposable;
 import reactor.core.Scannable;
@@ -27,6 +26,8 @@ import reactor.core.publisher.Sinks.EmitResult;
 import reactor.test.StepVerifier;
 import reactor.test.subscriber.AssertSubscriber;
 import reactor.util.context.Context;
+
+import java.util.concurrent.Flow;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -125,7 +126,7 @@ class SinkManyBestEffortTest {
 
 		sink.subscribe(new BaseSubscriber<Integer>() {
 			@Override
-			protected void hookOnSubscribe(Subscription subscription) {
+			protected void hookOnSubscribe(Flow.Subscription subscription) {
 				subscription.cancel();
 			}
 		});

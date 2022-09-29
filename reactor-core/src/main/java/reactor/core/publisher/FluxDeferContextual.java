@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,8 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.function.Function;
-
-import org.reactivestreams.Publisher;
 
 import reactor.core.CoreSubscriber;
 import reactor.util.context.Context;
@@ -34,15 +33,15 @@ import reactor.util.context.ContextView;
  */
 final class FluxDeferContextual<T> extends Flux<T> implements SourceProducer<T> {
 
-	final Function<ContextView, ? extends Publisher<? extends T>> contextualPublisherFactory;
+	final Function<ContextView, ? extends Flow.Publisher<? extends T>> contextualPublisherFactory;
 
-	FluxDeferContextual(Function<ContextView, ? extends Publisher<? extends T>> contextualPublisherFactory) {
+	FluxDeferContextual(Function<ContextView, ? extends Flow.Publisher<? extends T>> contextualPublisherFactory) {
 		this.contextualPublisherFactory = Objects.requireNonNull(contextualPublisherFactory, "contextualPublisherFactory");
 	}
 
 	@Override
 	public void subscribe(CoreSubscriber<? super T> actual) {
-		Publisher<? extends T> p;
+		Flow.Publisher<? extends T> p;
 
 		Context ctx = actual.currentContext();
 		try {

@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
@@ -103,9 +104,9 @@ public abstract class Exceptions {
 	}
 
 	/**
-	 * Wrap a {@link Throwable} delivered via {@link org.reactivestreams.Subscriber#onError(Throwable)}
-	 * from an upstream {@link org.reactivestreams.Publisher} that itself
-	 * emits {@link org.reactivestreams.Publisher}s to distinguish the error signal from
+	 * Wrap a {@link Throwable} delivered via {@link Flow.Subscriber#onError(Throwable)}
+	 * from an upstream {@link Flow.Publisher} that itself
+	 * emits {@link Flow.Publisher}s to distinguish the error signal from
 	 * the inner sequence's processing errors.
 	 * @param throwable the source sequence {@code error} signal
 	 * @return {@link SourceException}
@@ -393,7 +394,7 @@ public abstract class Exceptions {
 
 	/**
 	 * Prepare an unchecked {@link RuntimeException} that should be propagated
-	 * downstream through {@link org.reactivestreams.Subscriber#onError(Throwable)}.
+	 * downstream through {@link Flow.Subscriber#onError(Throwable)}.
 	 * <p>This method invokes {@link #throwIfFatal(Throwable)}.
 	 *
 	 * @param t the root cause
@@ -716,7 +717,7 @@ public abstract class Exceptions {
 	}
 
 	/**
-	 * An exception that is propagated downward through {@link org.reactivestreams.Subscriber#onError(Throwable)}
+	 * An exception that is propagated downward through {@link Flow.Subscriber#onError(Throwable)}
 	 */
 	static class ReactiveException extends RuntimeException {
 
@@ -739,9 +740,9 @@ public abstract class Exceptions {
 
 	/**
 	 * A {@link Throwable} that wraps the actual {@code cause} delivered via
-	 * {@link org.reactivestreams.Subscriber#onError(Throwable)} in case of
-	 * {@link org.reactivestreams.Publisher}s that themselves emit items of type
-	 * {@link org.reactivestreams.Publisher}. This wrapper is used to distinguish
+	 * {@link Flow.Subscriber#onError(Throwable)} in case of
+	 * {@link Flow.Publisher}s that themselves emit items of type
+	 * {@link Flow.Publisher}. This wrapper is used to distinguish
 	 * {@code error}s delivered by the upstream sequence from the ones that happen via
 	 * the inner sequence processing chain.
 	 */

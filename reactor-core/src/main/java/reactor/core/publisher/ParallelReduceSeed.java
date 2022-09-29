@@ -17,10 +17,10 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-import org.reactivestreams.Subscriber;
 import reactor.core.CoreSubscriber;
 import reactor.core.Fuseable;
 import reactor.core.Scannable;
@@ -93,8 +93,8 @@ final class ParallelReduceSeed<T, R> extends ParallelFlux<R> implements
 		source.subscribe(parents);
 	}
 
-	void reportError(Subscriber<?>[] subscribers, Throwable ex) {
-		for (Subscriber<?> s : subscribers) {
+	void reportError(Flow.Subscriber<?>[] subscribers, Throwable ex) {
+		for (Flow.Subscriber<?> s : subscribers) {
 			Operators.error(s, ex);
 		}
 	}

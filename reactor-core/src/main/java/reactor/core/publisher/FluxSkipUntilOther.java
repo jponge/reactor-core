@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,12 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.stream.Stream;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.util.annotation.Nullable;
@@ -87,7 +88,7 @@ final class FluxSkipUntilOther<T, U> extends InternalFluxOperator<T, T> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			main.setOther(s);
 
 			s.request(Long.MAX_VALUE);
@@ -133,21 +134,21 @@ final class FluxSkipUntilOther<T, U> extends InternalFluxOperator<T, T> {
 		final CoreSubscriber<? super T> actual;
 		final Context ctx;
 
-		volatile Subscription       main;
+		volatile Flow.Subscription main;
 
 		@SuppressWarnings("rawtypes")
-		static final AtomicReferenceFieldUpdater<SkipUntilMainSubscriber, Subscription>
+		static final AtomicReferenceFieldUpdater<SkipUntilMainSubscriber, Flow.Subscription>
 				MAIN =
 				AtomicReferenceFieldUpdater.newUpdater(SkipUntilMainSubscriber.class,
-						Subscription.class,
+						Flow.Subscription.class,
 						"main");
 
-		volatile Subscription other;
+		volatile Flow.Subscription other;
 		@SuppressWarnings("rawtypes")
-		static final AtomicReferenceFieldUpdater<SkipUntilMainSubscriber, Subscription>
+		static final AtomicReferenceFieldUpdater<SkipUntilMainSubscriber, Flow.Subscription>
 				OTHER =
 				AtomicReferenceFieldUpdater.newUpdater(SkipUntilMainSubscriber.class,
-						Subscription.class,
+						Flow.Subscription.class,
 						"other");
 
 		volatile boolean gate;
@@ -177,7 +178,7 @@ final class FluxSkipUntilOther<T, U> extends InternalFluxOperator<T, T> {
 			return Stream.of(Scannable.from(other));
 		}
 
-		void setOther(Subscription s) {
+		void setOther(Flow.Subscription s) {
 			if (!OTHER.compareAndSet(this, null, s)) {
 				s.cancel();
 				if (other != Operators.cancelledSubscription()) {
@@ -198,7 +199,7 @@ final class FluxSkipUntilOther<T, U> extends InternalFluxOperator<T, T> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (!MAIN.compareAndSet(this, null, s)) {
 				s.cancel();
 				if (main != Operators.cancelledSubscription()) {

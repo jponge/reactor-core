@@ -18,11 +18,11 @@ package reactor.core.publisher;
 
 import java.time.Duration;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.Flow;
 import java.util.stream.Stream;
 
-import org.reactivestreams.Processor;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Processor;
+import java.util.concurrent.Flow.Subscriber;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -52,11 +52,11 @@ import reactor.util.context.Context;
 @Deprecated
 public abstract class MonoProcessor<O> extends Mono<O>
 		implements Processor<O, O>, CoreSubscriber<O>, Disposable,
-		           Subscription,
+        Flow.Subscription,
 		           Scannable {
 
 	/**
-	 * Create a {@link MonoProcessor} that will eagerly request 1 on {@link #onSubscribe(Subscription)}, cache and emit
+	 * Create a {@link MonoProcessor} that will eagerly request 1 on {@link #onSubscribe(Flow.Subscription)}, cache and emit
 	 * the eventual result for 1 or N subscribers.
 	 *
 	 * @param <T> type of the expected value
@@ -70,7 +70,7 @@ public abstract class MonoProcessor<O> extends Mono<O>
 	}
 
 	/**
-	 * @deprecated the {@link MonoProcessor} will cease to implement {@link Subscription} in 3.5
+	 * @deprecated the {@link MonoProcessor} will cease to implement {@link Flow.Subscription} in 3.5
 	 */
 	@Override
 	@Deprecated
@@ -82,7 +82,7 @@ public abstract class MonoProcessor<O> extends Mono<O>
 	 *
 	 * @return {@code true} if this {@code MonoProcessor} is cancelled, {@code false}
 	 * otherwise.
-	 * @deprecated the {@link MonoProcessor} will cease to implement {@link Subscription} and this method will be removed in 3.5
+	 * @deprecated the {@link MonoProcessor} will cease to implement {@link Flow.Subscription} and this method will be removed in 3.5
 	 */
 	@Deprecated
 	public boolean isCancelled() {
@@ -91,7 +91,7 @@ public abstract class MonoProcessor<O> extends Mono<O>
 
 	/**
 	 * @param n the request amount
-	 * @deprecated the {@link MonoProcessor} will cease to implement {@link Subscription} in 3.5
+	 * @deprecated the {@link MonoProcessor} will cease to implement {@link Flow.Subscription} in 3.5
 	 */
 	@Override
 	@Deprecated

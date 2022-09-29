@@ -16,7 +16,7 @@
 
 /**
  * Components supporting the creation of test-oriented
- * {@link org.reactivestreams.Subscriber Subscribers}.
+ * {@link java.util.concurrent.Flow.Subscriber Subscribers}.
  */
 @NonNullApi
 package reactor.test.subscriber;

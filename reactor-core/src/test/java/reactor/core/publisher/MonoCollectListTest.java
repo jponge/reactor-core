@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -30,7 +31,6 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -174,7 +174,7 @@ class MonoCollectListTest {
 	public void scanBufferAllSubscriber() {
 		CoreSubscriber<List<String>> actual = new LambdaMonoSubscriber<>(null, e -> {}, null, null);
 		MonoCollectListSubscriber<String> test = new MonoCollectListSubscriber<>(actual);
-		Subscription parent = Operators.emptySubscription();
+		Flow.Subscription parent = Operators.emptySubscription();
 		test.onSubscribe(parent);
 
 		assertThat(test.scan(Scannable.Attr.PREFETCH)).isEqualTo(0);
@@ -325,7 +325,7 @@ class MonoCollectListTest {
 			CoreSubscriber<? super List<Integer>> testSubscriber = TestSubscriber.create();
 			MonoCollectList.MonoCollectListSubscriber<Integer> subscriber = new MonoCollectListSubscriber<>(testSubscriber);
 			CountDownLatch latch = new CountDownLatch(2);
-			Subscription synchronizedSubscription = new Subscription() {
+			Flow.Subscription synchronizedSubscription = new Flow.Subscription() {
 
 				boolean cancelled;
 

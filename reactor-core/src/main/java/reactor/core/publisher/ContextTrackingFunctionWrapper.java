@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2019-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,11 @@
 
 package reactor.core.publisher;
 
+import java.util.concurrent.Flow;
 import java.util.function.Function;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Publisher;
+
 import reactor.core.CorePublisher;
 import reactor.core.CoreSubscriber;
 import reactor.core.publisher.FluxContextWrite.ContextWriteSubscriber;
@@ -84,7 +85,7 @@ class ContextTrackingFunctionWrapper<T, V> implements Function<Publisher<T>, Cor
 			}
 
 			@Override
-			public void subscribe(Subscriber<? super V> subscriber) {
+			public void subscribe(Flow.Subscriber<? super V> subscriber) {
 				subscribe(Operators.toCoreSubscriber(subscriber));
 			}
 		};

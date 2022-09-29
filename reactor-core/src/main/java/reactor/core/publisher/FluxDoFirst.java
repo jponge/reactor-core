@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,19 @@
 
 package reactor.core.publisher;
 
-import org.reactivestreams.Subscriber;
-
 import reactor.core.CoreSubscriber;
 
+import java.util.concurrent.Flow;
+
 /**
- * Hook into the {@link org.reactivestreams.Publisher#subscribe(Subscriber)} of a
+ * Hook into the {@link Flow.Publisher#subscribe(Flow.Subscriber)} of a
  * {@link Flux} and execute a provided callback before calling
- * {@link org.reactivestreams.Publisher#subscribe(Subscriber)} directly with the
+ * {@link Flow.Publisher#subscribe(Flow.Subscriber)} directly with the
  * {@link CoreSubscriber}.
  *
  * <p>
  * Note that any exceptions thrown by the hook short circuit the subscription process and
- * are forwarded to the {@link Subscriber}'s {@link Subscriber#onError(Throwable)} method.
+ * are forwarded to the {@link Flow.Subscriber}'s {@link Flow.Subscriber#onError(Throwable)} method.
  *
  * @param <T> the value type
  * @author Simon Baslé

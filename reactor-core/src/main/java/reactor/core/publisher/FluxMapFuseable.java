@@ -17,10 +17,11 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.function.Function;
 
-import org.reactivestreams.Subscription;
-import reactor.core.CorePublisher;
+import java.util.concurrent.Flow.Subscription;
+
 import reactor.core.CoreSubscriber;
 import reactor.core.Fuseable;
 import reactor.util.annotation.Nullable;

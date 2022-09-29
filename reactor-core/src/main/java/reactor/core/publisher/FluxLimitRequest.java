@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2017-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,8 @@
 
 package reactor.core.publisher;
 
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
-
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.util.annotation.Nullable;
@@ -67,7 +66,7 @@ final class FluxLimitRequest<T> extends InternalFluxOperator<T, T> {
 
 		final CoreSubscriber<? super T> actual;
 
-		Subscription parent;
+		Flow.Subscription parent;
 		long toProduce;
 		boolean done;
 
@@ -126,7 +125,7 @@ final class FluxLimitRequest<T> extends InternalFluxOperator<T, T> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.validate(this.parent, s)) {
 				parent = s;
 				actual.onSubscribe(this);

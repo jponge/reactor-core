@@ -17,11 +17,11 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
 import reactor.core.Disposables;
@@ -79,7 +79,7 @@ final class MonoDelayElement<T> extends InternalMonoOperator<T, T> {
 		final Scheduler scheduler;
 		final TimeUnit unit;
 
-		Subscription s;
+		Flow.Subscription s;
 		T value;
 		boolean done;
 
@@ -122,7 +122,7 @@ final class MonoDelayElement<T> extends InternalMonoOperator<T, T> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.validate(this.s, s)) {
 				this.s = s;
 

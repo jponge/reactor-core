@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,10 @@
 
 package reactor.core.publisher;
 
-import org.reactivestreams.Publisher;
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
+
+import java.util.concurrent.Flow;
 
 /**
  * A connecting {@link Mono} Publisher (right-to-left from a composition chain
@@ -30,9 +31,9 @@ final class MonoSourceFlux<I> extends MonoFromFluxOperator<I, I> {
 
 
 	/**
-	 * Build a {@link MonoSourceFlux} wrapper around the passed parent {@link Publisher}
+	 * Build a {@link MonoSourceFlux} wrapper around the passed parent {@link Flow.Publisher}
 	 *
-	 * @param source the {@link Publisher} to decorate
+	 * @param source the {@link Flow.Publisher} to decorate
 	 */
 	MonoSourceFlux(Flux<? extends I> source) {
 		super(source);

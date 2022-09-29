@@ -17,12 +17,13 @@
 package reactor.core.publisher;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
+
+import java.util.concurrent.Flow;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -133,7 +134,7 @@ public class ParallelThenTest {
 		});
 		ParallelThen.ThenInner test = new ParallelThen.ThenInner(main);
 
-		Subscription s = Operators.emptySubscription();
+		Flow.Subscription s = Operators.emptySubscription();
 		test.onSubscribe(s);
 
 		assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(s);

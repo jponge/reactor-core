@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 package reactor.core.publisher;
 
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 
-import org.reactivestreams.Subscriber;
 import reactor.core.CoreSubscriber;
 import reactor.core.Fuseable;
 import reactor.util.annotation.Nullable;
@@ -121,7 +121,7 @@ final class FluxRange extends Flux<Integer>
 
 		void fastPath() {
 			final long e = end;
-			final Subscriber<? super Integer> a = actual;
+			final Flow.Subscriber<? super Integer> a = actual;
 
 			for (long i = index; i != e; i++) {
 				if (cancelled) {
@@ -139,7 +139,7 @@ final class FluxRange extends Flux<Integer>
 		}
 
 		void slowPath(long n) {
-			final Subscriber<? super Integer> a = actual;
+			final Flow.Subscriber<? super Integer> a = actual;
 
 			long f = end;
 			long e = 0;

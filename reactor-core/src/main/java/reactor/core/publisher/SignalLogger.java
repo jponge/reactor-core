@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,12 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.LongConsumer;
 import java.util.logging.Level;
-
-import org.reactivestreams.Subscription;
 
 import reactor.core.CorePublisher;
 import reactor.core.Fuseable;
@@ -221,7 +220,7 @@ final class SignalLogger<IN> implements SignalPeek<IN> {
 	}
 
 
-	static String subscriptionAsString(@Nullable Subscription s) {
+	static String subscriptionAsString(@Nullable Flow.Subscription s) {
 		if (s == null) {
 			return "null subscription";
 		}
@@ -233,7 +232,7 @@ final class SignalLogger<IN> implements SignalPeek<IN> {
 			asString.append("[Fuseable] ");
 		}
 
-		Class<? extends Subscription> clazz = s.getClass();
+		Class<? extends Flow.Subscription> clazz = s.getClass();
 		String name = clazz.getCanonicalName();
 		if (name == null) {
 			name = clazz.getName();
@@ -247,7 +246,7 @@ final class SignalLogger<IN> implements SignalPeek<IN> {
 
 	@Override
 	@Nullable
-	public Consumer<? super Subscription> onSubscribeCall() {
+	public Consumer<? super Flow.Subscription> onSubscribeCall() {
 		if ((options & ON_SUBSCRIBE) == ON_SUBSCRIBE && (level != Level.INFO || log.isInfoEnabled())) {
 			return s -> log(SignalType.ON_SUBSCRIBE, subscriptionAsString(s));
 		}

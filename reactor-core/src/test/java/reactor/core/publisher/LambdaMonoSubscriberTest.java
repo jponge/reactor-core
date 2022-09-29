@@ -17,17 +17,17 @@
 package reactor.core.publisher;
 
 import java.time.Duration;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.Scannable;
 import reactor.core.TestLoggerExtension;
-import reactor.test.util.LoggerUtils;
 import reactor.test.util.TestLogger;
 import reactor.util.context.Context;
 import reactor.util.context.ContextView;

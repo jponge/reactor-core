@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2021-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 package reactor.core.publisher;
 
+import java.util.concurrent.Flow;
 import java.util.function.Predicate;
 
-import org.reactivestreams.Subscription;
 import reactor.core.Fuseable;
 
 public class ConditionalStressSubscriber<T> extends StressSubscriber<T> implements Fuseable.ConditionalSubscriber<T> {
@@ -45,7 +45,7 @@ public class ConditionalStressSubscriber<T> extends StressSubscriber<T> implemen
 
 	/**
 	 * Build a {@link ConditionalStressSubscriber} that requests the provided amount in
-	 * {@link #onSubscribe(Subscription)}. Use {@code 0} to avoid any initial request
+	 * {@link #onSubscribe(Flow.Subscription)}. Use {@code 0} to avoid any initial request
 	 * upon subscription.
 	 *
 	 * @param initRequest the requested amount upon subscription, or zero to disable initial request
@@ -56,7 +56,7 @@ public class ConditionalStressSubscriber<T> extends StressSubscriber<T> implemen
 
 	/**
 	 * Build a {@link ConditionalStressSubscriber} that requests the provided amount in
-	 * {@link #onSubscribe(Subscription)}. Use {@code 0} to avoid any initial request
+	 * {@link #onSubscribe(Flow.Subscription)}. Use {@code 0} to avoid any initial request
 	 * upon subscription.
 	 *
 	 * @param initRequest the requested amount upon subscription, or zero to disable initial request

@@ -19,13 +19,13 @@ package reactor.core.publisher;
 import java.util.ArrayDeque;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscriber;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -131,7 +131,7 @@ final class FluxWindow<T> extends InternalFluxOperator<T, Flux<T>> {
 
 		int index;
 
-		Subscription s;
+		Flow.Subscription s;
 
 		Sinks.Many<T> window;
 
@@ -147,7 +147,7 @@ final class FluxWindow<T> extends InternalFluxOperator<T, Flux<T>> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.validate(this.s, s)) {
 				this.s = s;
 				actual.onSubscribe(this);
@@ -298,7 +298,7 @@ final class FluxWindow<T> extends InternalFluxOperator<T, Flux<T>> {
 
 		int index;
 
-		Subscription s;
+		Flow.Subscription s;
 
 		Sinks.Many<T> window;
 
@@ -317,7 +317,7 @@ final class FluxWindow<T> extends InternalFluxOperator<T, Flux<T>> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.validate(this.s, s)) {
 				this.s = s;
 				actual.onSubscribe(this);
@@ -504,7 +504,7 @@ final class FluxWindow<T> extends InternalFluxOperator<T, Flux<T>> {
 
 		int produced;
 
-		Subscription s;
+		Flow.Subscription s;
 
 		volatile boolean done;
 		Throwable error;
@@ -523,7 +523,7 @@ final class FluxWindow<T> extends InternalFluxOperator<T, Flux<T>> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.validate(this.s, s)) {
 				this.s = s;
 				actual.onSubscribe(this);

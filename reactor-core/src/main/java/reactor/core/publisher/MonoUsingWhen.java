@@ -18,12 +18,12 @@ package reactor.core.publisher;
 
 import java.util.Objects;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Flow;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
@@ -45,7 +45,7 @@ import reactor.util.context.Context;
  */
 final class MonoUsingWhen<T, S> extends Mono<T> implements SourceProducer<T> {
 
-	final Publisher<S>                                                     resourceSupplier;
+	final Publisher<S> resourceSupplier;
 	final Function<? super S, ? extends Mono<? extends T>>                 resourceClosure;
 	final Function<? super S, ? extends Publisher<?>>                      asyncComplete;
 	final BiFunction<? super S, ? super Throwable, ? extends Publisher<?>> asyncError;
@@ -53,10 +53,10 @@ final class MonoUsingWhen<T, S> extends Mono<T> implements SourceProducer<T> {
 	final Function<? super S, ? extends Publisher<?>>                      asyncCancel;
 
 	MonoUsingWhen(Publisher<S> resourceSupplier,
-			Function<? super S, ? extends Mono<? extends T>> resourceClosure,
-			Function<? super S, ? extends Publisher<?>> asyncComplete,
-			BiFunction<? super S, ? super Throwable, ? extends Publisher<?>> asyncError,
-			@Nullable Function<? super S, ? extends Publisher<?>> asyncCancel) {
+                  Function<? super S, ? extends Mono<? extends T>> resourceClosure,
+                  Function<? super S, ? extends Publisher<?>> asyncComplete,
+                  BiFunction<? super S, ? super Throwable, ? extends Publisher<?>> asyncError,
+                  @Nullable Function<? super S, ? extends Publisher<?>> asyncCancel) {
 		this.resourceSupplier = Objects.requireNonNull(resourceSupplier, "resourceSupplier");
 		this.resourceClosure = Objects.requireNonNull(resourceClosure, "resourceClosure");
 		this.asyncComplete = Objects.requireNonNull(asyncComplete, "asyncComplete");
@@ -148,7 +148,7 @@ final class MonoUsingWhen<T, S> extends Mono<T> implements SourceProducer<T> {
 		final Function<? super S, ? extends Publisher<?>>                      asyncCancel;
 		final boolean                                                          isMonoSource;
 
-		Subscription        resourceSubscription;
+		Flow.Subscription resourceSubscription;
 		boolean             resourceProvided;
 
 		ResourceSubscriber(CoreSubscriber<? super T> actual,
@@ -214,7 +214,7 @@ final class MonoUsingWhen<T, S> extends Mono<T> implements SourceProducer<T> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.validate(this.resourceSubscription, s)) {
 				this.resourceSubscription = s;
 				actual.onSubscribe(this);

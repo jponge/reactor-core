@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,14 @@ package reactor.core.publisher;
 
 import java.util.Objects;
 import java.util.Queue;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
 import reactor.core.Scannable;
@@ -35,13 +36,13 @@ import reactor.util.context.Context;
 import static reactor.core.publisher.Operators.cancelledSubscription;
 
 final class MonoSequenceEqual<T> extends Mono<Boolean> implements SourceProducer<Boolean>  {
-	final Publisher<? extends T>            first;
-	final Publisher<? extends T>            second;
+	final Publisher<? extends T> first;
+	final Publisher<? extends T> second;
 	final BiPredicate<? super T, ? super T> comparer;
 	final int                               prefetch;
 
 	MonoSequenceEqual(Publisher<? extends T> first, Publisher<? extends T> second,
-			BiPredicate<? super T, ? super T> comparer, int prefetch) {
+                      BiPredicate<? super T, ? super T> comparer, int prefetch) {
 		this.first = Objects.requireNonNull(first, "first");
 		this.second = Objects.requireNonNull(second, "second");
 		this.comparer = Objects.requireNonNull(comparer, "comparer");
@@ -163,7 +164,7 @@ final class MonoSequenceEqual<T> extends Mono<Boolean> implements SourceProducer
 		}
 
 		void cancelInner(EqualSubscriber<T> innerSubscriber) {
-			Subscription s = innerSubscriber.subscription;
+			Flow.Subscription s = innerSubscriber.subscription;
 			if (s != cancelledSubscription()) {
 				s = EqualSubscriber.S.getAndSet(innerSubscriber,
 						cancelledSubscription());
@@ -296,11 +297,11 @@ final class MonoSequenceEqual<T> extends Mono<Boolean> implements SourceProducer
 		volatile boolean done;
 		Throwable error;
 
-		Subscription cachedSubscription;
-		volatile Subscription subscription;
-		static final AtomicReferenceFieldUpdater<EqualSubscriber, Subscription> S =
+		Flow.Subscription cachedSubscription;
+		volatile Flow.Subscription subscription;
+		static final AtomicReferenceFieldUpdater<EqualSubscriber, Flow.Subscription> S =
 				AtomicReferenceFieldUpdater.newUpdater(EqualSubscriber.class,
-						Subscription.class, "subscription");
+						Flow.Subscription.class, "subscription");
 
 		EqualSubscriber(EqualCoordinator<T> parent, int prefetch) {
 			this.parent = parent;
@@ -329,7 +330,7 @@ final class MonoSequenceEqual<T> extends Mono<Boolean> implements SourceProducer
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.setOnce(S, this, s)) {
 				this.cachedSubscription = s;
 				s.request(Operators.unboundedOrPrefetch(prefetch));

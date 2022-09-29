@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2017-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,14 @@ package reactor.core.publisher;
 
 import java.time.Duration;
 import java.util.Collections;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.test.StepVerifier;
@@ -232,7 +233,7 @@ public class MonoDelayUntilTest {
 		@SuppressWarnings("unchecked")
 		Function<? super String, ? extends Publisher<?>>[] otherGenerators = new Function[3];
 		MonoDelayUntil.DelayUntilCoordinator<String> test = new MonoDelayUntil.DelayUntilCoordinator<>(actual, otherGenerators);
-		Subscription subscription = Operators.emptySubscription();
+		Flow.Subscription subscription = Operators.emptySubscription();
 		test.onSubscribe(subscription);
 
 		assertThat(test.scan(Scannable.Attr.PARENT)).isNull();
@@ -263,7 +264,7 @@ public class MonoDelayUntilTest {
 		MonoDelayUntil.DelayUntilTrigger<String> test = new MonoDelayUntil.DelayUntilTrigger<>(main);
 		main.triggerSubscriber = test;
 
-		Subscription subscription = Operators.emptySubscription();
+		Flow.Subscription subscription = Operators.emptySubscription();
 		test.onSubscribe(subscription);
 
 		assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(subscription);

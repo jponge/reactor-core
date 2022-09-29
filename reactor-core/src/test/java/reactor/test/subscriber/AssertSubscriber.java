@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
@@ -33,9 +34,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Fuseable;
 import reactor.core.publisher.Operators;
@@ -203,7 +203,7 @@ public class AssertSubscriber<T>
 
 	/**
 	 * Create a new {@link AssertSubscriber} that requests an unbounded number of elements.
-	 * <p>Be sure at least a publisher has subscribed to it via {@link Publisher#subscribe(Subscriber)}
+	 * <p>Be sure at least a publisher has subscribed to it via {@link Publisher#subscribe(Flow.Subscriber)}
 	 * before use assert methods.
 	 * @param <T> the observed value type
 	 * @return a fresh AssertSubscriber instance
@@ -215,7 +215,7 @@ public class AssertSubscriber<T>
 	/**
 	 * Create a new {@link AssertSubscriber} that requests initially {@code n} elements. You
 	 * can then manage the demand with {@link Subscription#request(long)}.
-	 * <p>Be sure at least a publisher has subscribed to it via {@link Publisher#subscribe(Subscriber)}
+	 * <p>Be sure at least a publisher has subscribed to it via {@link Publisher#subscribe(Flow.Subscriber)}
 	 * before use assert methods.
 	 * @param n Number of elements to request (can be 0 if you want no initial demand).
      * @param <T> the observed value type

@@ -17,12 +17,12 @@
 package reactor.core.publisher;
 
 import java.time.Duration;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscriber;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -123,7 +123,7 @@ class SinkEmptyMulticastTest {
 	void cantSubscribeWithNullSubscriber() {
 		SinkEmptyMulticast<Void> mp = new SinkEmptyMulticast<>();
 
-		assertThatNullPointerException().isThrownBy(() -> mp.subscribe((Subscriber<Void>) null));
+		assertThatNullPointerException().isThrownBy(() -> mp.subscribe((Flow.Subscriber<Void>) null));
 	}
 
 	@Test

@@ -23,12 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -44,8 +39,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.assertj.core.api.Assertions;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
 
 import reactor.core.Disposable;
 import reactor.core.Exceptions;
@@ -345,7 +339,7 @@ public class GuideTests {
 		source.map(String::toUpperCase)
 		      .subscribe(new BaseSubscriber<String>() { // <1>
 			      @Override
-			      protected void hookOnSubscribe(Subscription subscription) {
+			      protected void hookOnSubscribe(Flow.Subscription subscription) {
 				      // <2>
 				      request(1); // <3>
 			      }

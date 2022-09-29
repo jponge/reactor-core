@@ -16,11 +16,12 @@
 
 package reactor.core.publisher;
 
+import java.util.concurrent.Flow;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.util.annotation.Nullable;
 import reactor.util.context.Context;

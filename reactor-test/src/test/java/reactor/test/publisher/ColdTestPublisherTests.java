@@ -17,14 +17,14 @@
 package reactor.test.publisher;
 
 import java.time.Duration;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.CoreSubscriber;
-import reactor.core.publisher.BaseSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
@@ -176,7 +176,7 @@ public class ColdTestPublisherTests {
 		TestPublisher<String> publisher = TestPublisher.createCold();
 		AtomicLong count = new AtomicLong();
 
-		Subscriber<String> subscriber = new CoreSubscriber<String>() {
+		Flow.Subscriber<String> subscriber = new CoreSubscriber<String>() {
 			@Override
 			public void onSubscribe(Subscription s) { }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2017-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ package reactor.core.publisher;
 
 import java.time.Duration;
 import java.util.Optional;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 import reactor.core.Scannable;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -153,7 +153,7 @@ public class BlockingOptionalMonoSubscriberTest {
 	public void scanOperator() {
 		BlockingOptionalMonoSubscriber<String> test = new BlockingOptionalMonoSubscriber<>();
 
-		Subscription parent = Operators.emptySubscription();
+		Flow.Subscription parent = Operators.emptySubscription();
 		test.onSubscribe(parent);
 
 		assertThat(test.scan(Scannable.Attr.NAME)).as("NAME (not covered)").isNull();

@@ -31,6 +31,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.BiConsumer;
@@ -47,9 +48,9 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import io.micrometer.core.instrument.MeterRegistry;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CorePublisher;
 import reactor.core.CoreSubscriber;
@@ -209,8 +210,8 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 */
     @SuppressWarnings("unchecked")
     public static <T1, T2, V> Flux<V> combineLatest(Publisher<? extends T1> source1,
-			Publisher<? extends T2> source2,
-			BiFunction<? super T1, ? super T2, ? extends V> combinator) {
+                                                    Publisher<? extends T2> source2,
+                                                    BiFunction<? super T1, ? super T2, ? extends V> combinator) {
 	    return combineLatest(tuple -> combinator.apply((T1)tuple[0], (T2)tuple[1]), source1, source2);
 	}
 
@@ -237,9 +238,9 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a {@link Flux} based on the produced combinations
 	 */
 	public static <T1, T2, T3, V> Flux<V> combineLatest(Publisher<? extends T1> source1,
-			Publisher<? extends T2> source2,
-			Publisher<? extends T3> source3,
-			Function<Object[], V> combinator) {
+                                                        Publisher<? extends T2> source2,
+                                                        Publisher<? extends T3> source3,
+                                                        Function<Object[], V> combinator) {
 		return combineLatest(combinator, source1, source2, source3);
 	}
 
@@ -302,11 +303,11 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a {@link Flux} based on the produced combinations
 	 */
 	public static <T1, T2, T3, T4, T5, V> Flux<V> combineLatest(Publisher<? extends T1> source1,
-			Publisher<? extends T2> source2,
-			Publisher<? extends T3> source3,
-			Publisher<? extends T4> source4,
-			Publisher<? extends T5> source5,
-			Function<Object[], V> combinator) {
+                                                                Publisher<? extends T2> source2,
+                                                                Publisher<? extends T3> source3,
+                                                                Publisher<? extends T4> source4,
+                                                                Publisher<? extends T5> source5,
+                                                                Function<Object[], V> combinator) {
 		return combineLatest(combinator, source1, source2, source3, source4, source5);
 	}
 
@@ -339,12 +340,12 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a {@link Flux} based on the produced combinations
 	 */
 	public static <T1, T2, T3, T4, T5, T6, V> Flux<V> combineLatest(Publisher<? extends T1> source1,
-			Publisher<? extends T2> source2,
-			Publisher<? extends T3> source3,
-			Publisher<? extends T4> source4,
-			Publisher<? extends T5> source5,
-			Publisher<? extends T6> source6,
-			Function<Object[], V> combinator) {
+                                                                    Publisher<? extends T2> source2,
+                                                                    Publisher<? extends T3> source3,
+                                                                    Publisher<? extends T4> source4,
+                                                                    Publisher<? extends T5> source5,
+                                                                    Publisher<? extends T6> source6,
+                                                                    Function<Object[], V> combinator) {
 		return combineLatest(combinator, source1, source2, source3, source4, source5, source6);
 	}
 
@@ -573,7 +574,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a new {@link Flux} concatenating all inner sources sequences until complete or error
 	 */
 	public static <T> Flux<T> concatDelayError(Publisher<? extends Publisher<? extends
-			T>> sources, boolean delayUntilEnd, int prefetch) {
+                T>> sources, boolean delayUntilEnd, int prefetch) {
 		return from(sources).concatMapDelayError(identityFunction(), delayUntilEnd, prefetch);
 	}
 
@@ -1744,7 +1745,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a merged {@link Flux}, subscribing early but keeping the original ordering
 	 */
 	public static <T> Flux<T> mergeSequentialDelayError(Publisher<? extends Publisher<? extends T>> sources,
-			int maxConcurrency, int prefetch) {
+                                                        int maxConcurrency, int prefetch) {
 		return mergeSequential(sources, true, maxConcurrency, prefetch);
 	}
 
@@ -1976,7 +1977,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @see #usingWhen(Publisher, Function, Function)
 	 */
 	public static <T, D> Flux<T> using(Callable<? extends D> resourceSupplier, Function<? super D, ? extends
-			Publisher<? extends T>> sourceSupplier, Consumer<? super D> resourceCleanup) {
+            Publisher<? extends T>> sourceSupplier, Consumer<? super D> resourceCleanup) {
 		return using(resourceSupplier, sourceSupplier, resourceCleanup, true);
 	}
 
@@ -2005,7 +2006,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @see #usingWhen(Publisher, Function, Function)
 	 */
 	public static <T, D> Flux<T> using(Callable<? extends D> resourceSupplier, Function<? super D, ? extends
-			Publisher<? extends T>> sourceSupplier, Consumer<? super D> resourceCleanup, boolean eager) {
+            Publisher<? extends T>> sourceSupplier, Consumer<? super D> resourceCleanup, boolean eager) {
 		return onAssembly(new FluxUsing<>(resourceSupplier,
 				sourceSupplier,
 				resourceCleanup,
@@ -2098,11 +2099,11 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @see #usingWhen(Publisher, Function, Function)
 	 */
 	public static <T, D> Flux<T> usingWhen(Publisher<D> resourceSupplier,
-			Function<? super D, ? extends Publisher<? extends T>> resourceClosure,
-			Function<? super D, ? extends Publisher<?>> asyncComplete,
-			BiFunction<? super D, ? super Throwable, ? extends Publisher<?>> asyncError,
-			//the operator itself accepts null for asyncCancel, but we won't in the public API
-			Function<? super D, ? extends Publisher<?>> asyncCancel) {
+                                           Function<? super D, ? extends Publisher<? extends T>> resourceClosure,
+                                           Function<? super D, ? extends Publisher<?>> asyncComplete,
+                                           BiFunction<? super D, ? super Throwable, ? extends Publisher<?>> asyncError,
+                                           //the operator itself accepts null for asyncCancel, but we won't in the public API
+                                           Function<? super D, ? extends Publisher<?>> asyncCancel) {
 		return onAssembly(new FluxUsingWhen<>(resourceSupplier, resourceClosure,
 				asyncComplete, asyncError, asyncCancel));
 	}
@@ -2127,8 +2128,8 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a zipped {@link Flux}
 	 */
     public static <T1, T2, O> Flux<O> zip(Publisher<? extends T1> source1,
-			Publisher<? extends T2> source2,
-			final BiFunction<? super T1, ? super T2, ? extends O> combinator) {
+                                          Publisher<? extends T2> source2,
+                                          final BiFunction<? super T1, ? super T2, ? extends O> combinator) {
 
 		return onAssembly(new FluxZip<T1, O>(source1,
 				source2,
@@ -2176,8 +2177,8 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a zipped {@link Flux}
 	 */
 	public static <T1, T2, T3> Flux<Tuple3<T1, T2, T3>> zip(Publisher<? extends T1> source1,
-			Publisher<? extends T2> source2,
-			Publisher<? extends T3> source3) {
+                                                            Publisher<? extends T2> source2,
+                                                            Publisher<? extends T3> source3) {
 		return zip(Tuples.fn3(), source1, source2, source3);
 	}
 
@@ -2202,9 +2203,9 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a zipped {@link Flux}
 	 */
 	public static <T1, T2, T3, T4> Flux<Tuple4<T1, T2, T3, T4>> zip(Publisher<? extends T1> source1,
-			Publisher<? extends T2> source2,
-			Publisher<? extends T3> source3,
-			Publisher<? extends T4> source4) {
+                                                                    Publisher<? extends T2> source2,
+                                                                    Publisher<? extends T3> source3,
+                                                                    Publisher<? extends T4> source4) {
 		return zip(Tuples.fn4(), source1, source2, source3, source4);
 	}
 
@@ -2263,11 +2264,11 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a zipped {@link Flux}
 	 */
 	public static <T1, T2, T3, T4, T5, T6> Flux<Tuple6<T1, T2, T3, T4, T5, T6>> zip(Publisher<? extends T1> source1,
-			Publisher<? extends T2> source2,
-			Publisher<? extends T3> source3,
-			Publisher<? extends T4> source4,
-			Publisher<? extends T5> source5,
-			Publisher<? extends T6> source6) {
+                                                                                    Publisher<? extends T2> source2,
+                                                                                    Publisher<? extends T3> source3,
+                                                                                    Publisher<? extends T4> source4,
+                                                                                    Publisher<? extends T5> source5,
+                                                                                    Publisher<? extends T6> source6) {
 		return zip(Tuples.fn6(), source1, source2, source3, source4, source5, source6);
 	}
 
@@ -2298,12 +2299,12 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a zipped {@link Flux}
 	 */
 	public static <T1, T2, T3, T4, T5, T6, T7> Flux<Tuple7<T1, T2, T3, T4, T5, T6, T7>> zip(Publisher<? extends T1> source1,
-			Publisher<? extends T2> source2,
-			Publisher<? extends T3> source3,
-			Publisher<? extends T4> source4,
-			Publisher<? extends T5> source5,
-			Publisher<? extends T6> source6,
-			Publisher<? extends T7> source7) {
+                                                                                            Publisher<? extends T2> source2,
+                                                                                            Publisher<? extends T3> source3,
+                                                                                            Publisher<? extends T4> source4,
+                                                                                            Publisher<? extends T5> source5,
+                                                                                            Publisher<? extends T6> source6,
+                                                                                            Publisher<? extends T7> source7) {
 		return zip(Tuples.fn7(), source1, source2, source3, source4, source5, source6, source7);
 	}
 
@@ -2336,13 +2337,13 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a zipped {@link Flux}
 	 */
 	public static <T1, T2, T3, T4, T5, T6, T7, T8> Flux<Tuple8<T1, T2, T3, T4, T5, T6, T7, T8>> zip(Publisher<? extends T1> source1,
-			Publisher<? extends T2> source2,
-			Publisher<? extends T3> source3,
-			Publisher<? extends T4> source4,
-			Publisher<? extends T5> source5,
-			Publisher<? extends T6> source6,
-			Publisher<? extends T7> source7,
-			Publisher<? extends T8> source8) {
+                                                                                                    Publisher<? extends T2> source2,
+                                                                                                    Publisher<? extends T3> source3,
+                                                                                                    Publisher<? extends T4> source4,
+                                                                                                    Publisher<? extends T5> source5,
+                                                                                                    Publisher<? extends T6> source6,
+                                                                                                    Publisher<? extends T7> source7,
+                                                                                                    Publisher<? extends T8> source8) {
 		return zip(Tuples.fn8(), source1, source2, source3, source4, source5, source6, source7, source8);
 	}
 
@@ -2493,8 +2494,8 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
     public static <TUPLE extends Tuple2, V> Flux<V> zip(Publisher<? extends
-			Publisher<?>> sources,
-			final Function<? super TUPLE, ? extends V> combinator) {
+            Publisher<?>> sources,
+                                                        final Function<? super TUPLE, ? extends V> combinator) {
 
 		return onAssembly(new FluxBuffer<>(from(sources), Integer.MAX_VALUE, listSupplier())
 		                    .flatMap(new Function<List<? extends Publisher<?>>, Publisher<V>>() {
@@ -3143,7 +3144,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * closing {@link Publisher}
 	 */
 	public final <U, V> Flux<List<T>> bufferWhen(Publisher<U> bucketOpening,
-			Function<? super U, ? extends Publisher<V>> closeSelector) {
+                                                 Function<? super U, ? extends Publisher<V>> closeSelector) {
 		return bufferWhen(bucketOpening, closeSelector, listSupplier());
 	}
 
@@ -3174,7 +3175,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * closing {@link Publisher}
 	 */
 	public final <U, V, C extends Collection<? super T>> Flux<C> bufferWhen(Publisher<U> bucketOpening,
-			Function<? super U, ? extends Publisher<V>> closeSelector, Supplier<C> bufferSupplier) {
+                                                                            Function<? super U, ? extends Publisher<V>> closeSelector, Supplier<C> bufferSupplier) {
 		return onAssembly(new FluxBufferWhen<>(this, bucketOpening, closeSelector,
 				bufferSupplier, Queues.unbounded(Queues.XS_BUFFER_SIZE)));
 	}
@@ -5441,7 +5442,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a merged {@link Flux}, subscribing early but keeping the original ordering
 	 */
 	public final <R> Flux<R> flatMapSequential(Function<? super T, ? extends
-			Publisher<? extends R>> mapper) {
+            Publisher<? extends R>> mapper) {
 		return flatMapSequential(mapper, Queues.SMALL_BUFFER_SIZE);
 	}
 
@@ -5482,7 +5483,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a merged {@link Flux}, subscribing early but keeping the original ordering
 	 */
 	public final <R> Flux<R> flatMapSequential(Function<? super T, ? extends
-			Publisher<? extends R>> mapper, int maxConcurrency) {
+            Publisher<? extends R>> mapper, int maxConcurrency) {
 		return flatMapSequential(mapper, maxConcurrency, Queues.XS_BUFFER_SIZE);
 	}
 
@@ -5526,7 +5527,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a merged {@link Flux}, subscribing early but keeping the original ordering
 	 */
 	public final <R> Flux<R> flatMapSequential(Function<? super T, ? extends
-			Publisher<? extends R>> mapper, int maxConcurrency, int prefetch) {
+            Publisher<? extends R>> mapper, int maxConcurrency, int prefetch) {
 		return flatMapSequential(mapper, false, maxConcurrency, prefetch);
 	}
 
@@ -6338,7 +6339,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 */
 	@Deprecated
 	public final Flux<T> mergeOrderedWith(Publisher<? extends T> other,
-			Comparator<? super T> otherComparator) {
+                                          Comparator<? super T> otherComparator) {
 		if (this instanceof FluxMergeComparing) {
 			FluxMergeComparing<T> fluxMerge = (FluxMergeComparing<T>) this;
 			return fluxMerge.mergeAdditionalSource(other, otherComparator);
@@ -6373,7 +6374,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * and this flux, using the smallest value and replenishing the source that produced it
 	 */
 	public final Flux<T> mergeComparingWith(Publisher<? extends T> other,
-			Comparator<? super T> otherComparator) {
+                                            Comparator<? super T> otherComparator) {
 		if (this instanceof FluxMergeComparing) {
 			FluxMergeComparing<T> fluxMerge = (FluxMergeComparing<T>) this;
 			return fluxMerge.mergeAdditionalSource(other, otherComparator);
@@ -7226,7 +7227,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a new {@link Flux}
 	 */
 	public final <R> Flux<R> publish(Function<? super Flux<T>, ? extends Publisher<?
-			extends R>> transform) {
+                extends R>> transform) {
 		return publish(transform, Queues.SMALL_BUFFER_SIZE);
 	}
 
@@ -7242,7 +7243,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a new {@link Flux}
 	 */
 	public final <R> Flux<R> publish(Function<? super Flux<T>, ? extends Publisher<?
-			extends R>> transform, int prefetch) {
+                extends R>> transform, int prefetch) {
 		return onAssembly(new FluxPublishMulticast<>(this, transform, prefetch, Queues
 				.get(prefetch)));
 	}
@@ -7706,8 +7707,8 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * <p>
 	 * Note that the {@link reactor.util.retry.Retry.RetrySignal} state can be
 	 * transient and change between each source
-	 * {@link org.reactivestreams.Subscriber#onError(Throwable) onError} or
-	 * {@link org.reactivestreams.Subscriber#onNext(Object) onNext}. If processed with a delay,
+	 * {@link Subscriber#onError(Throwable) onError} or
+	 * {@link Subscriber#onNext(Object) onNext}. If processed with a delay,
 	 * this could lead to the represented state being out of sync with the state at which the retry
 	 * was evaluated. Map it to {@link reactor.util.retry.Retry.RetrySignal#copy()}
 	 * right away to mediate this.
@@ -9348,8 +9349,8 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	}
 
 	private final <U, V> Flux<T> timeout(Publisher<U> firstTimeout,
-			Function<? super T, ? extends Publisher<V>> nextTimeoutFactory,
-			String timeoutDescription) {
+                                         Function<? super T, ? extends Publisher<V>> nextTimeoutFactory,
+                                         String timeoutDescription) {
 			return onAssembly(new FluxTimeout<>(this, firstTimeout, nextTimeoutFactory, timeoutDescription));
 	}
 
@@ -9373,7 +9374,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * a signal from a per-item companion {@link Publisher}
 	 */
 	public final <U, V> Flux<T> timeout(Publisher<U> firstTimeout,
-			Function<? super T, ? extends Publisher<V>> nextTimeoutFactory, Publisher<? extends T>
+                                        Function<? super T, ? extends Publisher<V>> nextTimeoutFactory, Publisher<? extends T>
 			fallback) {
 		return onAssembly(new FluxTimeout<>(this, firstTimeout, nextTimeoutFactory,
 				fallback));
@@ -10372,7 +10373,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * {@link Publisher} and lasting until a selected second {@link Publisher} emits
 	 */
 	public final <U, V> Flux<Flux<T>> windowWhen(Publisher<U> bucketOpening,
-			final Function<? super U, ? extends Publisher<V>> closeSelector) {
+                                                 final Function<? super U, ? extends Publisher<V>> closeSelector) {
 		return onAssembly(new FluxWindowWhen<>(this,
 				bucketOpening,
 				closeSelector,
@@ -10443,7 +10444,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 * @return a zipped {@link Flux}
 	 */
 	public final <T2, V> Flux<V> zipWith(Publisher<? extends T2> source2,
-			final BiFunction<? super T, ? super T2, ? extends V> combinator) {
+                                         final BiFunction<? super T, ? super T2, ? extends V> combinator) {
 		if (this instanceof FluxZip) {
 			@SuppressWarnings("unchecked")
 			FluxZip<T, V> o = (FluxZip<T, V>) this;
@@ -10476,8 +10477,8 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public final <T2, V> Flux<V> zipWith(Publisher<? extends T2> source2,
-			int prefetch,
-			BiFunction<? super T, ? super T2, ? extends V> combinator) {
+                                         int prefetch,
+                                         BiFunction<? super T, ? super T2, ? extends V> combinator) {
 		return zip(objects -> combinator.apply((T) objects[0], (T2) objects[1]),
 				prefetch,
 				this,
@@ -10599,7 +10600,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 
 
 	final <V> Flux<V> flatMap(Function<? super T, ? extends Publisher<? extends
-			V>> mapper, boolean delayError, int concurrency, int prefetch) {
+                V>> mapper, boolean delayError, int concurrency, int prefetch) {
 		return onAssembly(new FluxFlatMap<>(
 				this,
 				mapper,
@@ -10612,8 +10613,8 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	}
 
 	final <R> Flux<R> flatMapSequential(Function<? super T, ? extends
-			Publisher<? extends R>> mapper, boolean delayError, int maxConcurrency,
-			int prefetch) {
+            Publisher<? extends R>> mapper, boolean delayError, int maxConcurrency,
+                                        int prefetch) {
 		return onAssembly(new FluxMergeSequential<>(this, mapper, maxConcurrency,
 				prefetch, delayError ? FluxConcatMap.ErrorMode.END :
 				FluxConcatMap.ErrorMode.IMMEDIATE));
@@ -10706,7 +10707,7 @@ public abstract class Flux<T> implements CorePublisher<T> {
 	}
 
 	static <T> Flux<T> mergeSequential(Publisher<? extends Publisher<? extends T>> sources,
-			boolean delayError, int maxConcurrency, int prefetch) {
+                                       boolean delayError, int maxConcurrency, int prefetch) {
 		return onAssembly(new FluxMergeSequential<>(from(sources),
 				identityFunction(),
 				maxConcurrency, prefetch, delayError ? FluxConcatMap.ErrorMode.END :

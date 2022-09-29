@@ -17,18 +17,15 @@
 package reactor.core.scheduler;
 
 import java.time.Duration;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
+
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.Disposable;
 import reactor.core.publisher.BaseSubscriber;
 import reactor.core.publisher.Flux;
@@ -297,7 +294,7 @@ public class RejectedExecutionTest {
 	}
 
 
-	private void verifyRejectedExecutionConsistency(Publisher<Long> flux, int elementCount) {
+	private void verifyRejectedExecutionConsistency(Flow.Publisher<Long> flux, int elementCount) {
 		scheduler.tasksRemaining.set(elementCount + 1);
 		StepVerifier verifier = StepVerifier.create(flux, 0)
 					.expectSubscription()

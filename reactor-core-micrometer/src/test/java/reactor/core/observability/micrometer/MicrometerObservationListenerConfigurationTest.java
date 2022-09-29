@@ -20,7 +20,7 @@ import io.micrometer.common.KeyValues;
 import io.micrometer.observation.ObservationRegistry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

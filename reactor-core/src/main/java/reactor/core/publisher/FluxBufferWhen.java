@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,16 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
+
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
 import reactor.core.Disposables;
@@ -114,9 +115,9 @@ final class FluxBufferWhen<T, OPEN, CLOSE, BUFFER extends Collection<? super T>>
 		static final AtomicLongFieldUpdater<BufferWhenMainSubscriber> REQUESTED =
 		AtomicLongFieldUpdater.newUpdater(BufferWhenMainSubscriber.class, "requested");
 
-		volatile Subscription s;
-		static final AtomicReferenceFieldUpdater<BufferWhenMainSubscriber, Subscription> S =
-				AtomicReferenceFieldUpdater.newUpdater(BufferWhenMainSubscriber.class, Subscription.class, "s");
+		volatile Flow.Subscription s;
+		static final AtomicReferenceFieldUpdater<BufferWhenMainSubscriber, Flow.Subscription> S =
+				AtomicReferenceFieldUpdater.newUpdater(BufferWhenMainSubscriber.class, Flow.Subscription.class, "s");
 
 		volatile Throwable errors;
 		static final AtomicReferenceFieldUpdater<BufferWhenMainSubscriber, Throwable>
@@ -149,7 +150,7 @@ final class FluxBufferWhen<T, OPEN, CLOSE, BUFFER extends Collection<? super T>>
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.setOnce(S, this, s)) {
 				s.request(Long.MAX_VALUE);
 			}
@@ -438,9 +439,9 @@ final class FluxBufferWhen<T, OPEN, CLOSE, BUFFER extends Collection<? super T>>
 	static final class BufferWhenOpenSubscriber<OPEN>
 			implements Disposable, InnerConsumer<OPEN> {
 
-		volatile Subscription subscription;
-		static final AtomicReferenceFieldUpdater<BufferWhenOpenSubscriber, Subscription> SUBSCRIPTION =
-				AtomicReferenceFieldUpdater.newUpdater(BufferWhenOpenSubscriber.class, Subscription.class, "subscription");
+		volatile Flow.Subscription subscription;
+		static final AtomicReferenceFieldUpdater<BufferWhenOpenSubscriber, Flow.Subscription> SUBSCRIPTION =
+				AtomicReferenceFieldUpdater.newUpdater(BufferWhenOpenSubscriber.class, Flow.Subscription.class, "subscription");
 
 		final BufferWhenMainSubscriber<?, OPEN, ?, ?> parent;
 
@@ -454,7 +455,7 @@ final class FluxBufferWhen<T, OPEN, CLOSE, BUFFER extends Collection<? super T>>
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.setOnce(SUBSCRIPTION, this, s)) {
 				subscription.request(Long.MAX_VALUE);
 			}
@@ -503,9 +504,9 @@ final class FluxBufferWhen<T, OPEN, CLOSE, BUFFER extends Collection<? super T>>
 	static final class BufferWhenCloseSubscriber<T, BUFFER extends Collection<? super T>>
 			implements Disposable, InnerConsumer<Object> {
 
-		volatile Subscription subscription;
-		static final AtomicReferenceFieldUpdater<BufferWhenCloseSubscriber, Subscription> SUBSCRIPTION =
-				AtomicReferenceFieldUpdater.newUpdater(BufferWhenCloseSubscriber.class, Subscription.class, "subscription");
+		volatile Flow.Subscription subscription;
+		static final AtomicReferenceFieldUpdater<BufferWhenCloseSubscriber, Flow.Subscription> SUBSCRIPTION =
+				AtomicReferenceFieldUpdater.newUpdater(BufferWhenCloseSubscriber.class, Flow.Subscription.class, "subscription");
 
 		final BufferWhenMainSubscriber<T, ?, ?, BUFFER> parent;
 		final long                                      index;
@@ -522,7 +523,7 @@ final class FluxBufferWhen<T, OPEN, CLOSE, BUFFER extends Collection<? super T>>
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.setOnce(SUBSCRIPTION, this, s)) {
 				subscription.request(Long.MAX_VALUE);
 			}
@@ -540,7 +541,7 @@ final class FluxBufferWhen<T, OPEN, CLOSE, BUFFER extends Collection<? super T>>
 
 		@Override
 		public void onNext(Object t) {
-			Subscription s = subscription;
+			Flow.Subscription s = subscription;
 			if (s != Operators.cancelledSubscription()) {
 				SUBSCRIPTION.lazySet(this, Operators.cancelledSubscription());
 				s.cancel();

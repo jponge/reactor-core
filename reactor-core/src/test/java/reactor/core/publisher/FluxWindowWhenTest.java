@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.atomic.LongAdder;
@@ -29,8 +30,6 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.test.MemoryUtils;
@@ -51,7 +50,7 @@ public class FluxWindowWhenTest {
 
 	private static final Logger LOGGER = Loggers.getLogger(FluxWindowWhenTest.class);
 
-	static <T> AssertSubscriber<T> toList(Publisher<T> windows) {
+	static <T> AssertSubscriber<T> toList(Flow.Publisher<T> windows) {
 		AssertSubscriber<T> ts = AssertSubscriber.create();
 		windows.subscribe(ts);
 		return ts;
@@ -622,7 +621,7 @@ public class FluxWindowWhenTest {
         		new FluxWindowWhen.WindowWhenMainSubscriber<>(actual,
 				        Flux.never(), Flux::just,
 				        Queues.unbounded());
-        Subscription parent = Operators.emptySubscription();
+        Flow.Subscription parent = Operators.emptySubscription();
         test.onSubscribe(parent);
 
 		Assertions.assertThat(test.scan(Scannable.Attr.ACTUAL)).isSameAs(actual);
@@ -650,7 +649,7 @@ public class FluxWindowWhenTest {
         		new FluxWindowWhen.WindowWhenMainSubscriber<>(actual,
 				        Flux.never(), Flux::just,
 				        Queues.unbounded());
-        Subscription parent = Operators.emptySubscription();
+        Flow.Subscription parent = Operators.emptySubscription();
         test.onSubscribe(parent);
 
 		Assertions.assertThat(test.scan(Scannable.Attr.TERMINATED)).isFalse();

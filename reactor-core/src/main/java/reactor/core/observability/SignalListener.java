@@ -16,15 +16,17 @@
 
 package reactor.core.observability;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Operators;
 import reactor.core.publisher.SignalType;
 import reactor.util.context.Context;
+
+import java.util.concurrent.Flow;
 
 /**
  * A listener which combines various handlers to be triggered per the corresponding {@link Flux} or {@link Mono} signals.

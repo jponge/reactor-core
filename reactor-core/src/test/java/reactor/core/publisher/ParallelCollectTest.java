@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.core.publisher.ParallelCollect.ParallelCollectSubscriber;

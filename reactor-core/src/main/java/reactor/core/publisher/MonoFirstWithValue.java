@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 package reactor.core.publisher;
 
-import org.reactivestreams.Publisher;
 import reactor.core.CoreSubscriber;
 import reactor.util.annotation.Nullable;
 
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.concurrent.Flow;
 
 final class MonoFirstWithValue<T> extends Mono<T> implements SourceProducer<T> {
 
@@ -83,13 +83,13 @@ final class MonoFirstWithValue<T> extends Mono<T> implements SourceProducer<T> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void subscribe(CoreSubscriber<? super T> actual) {
-		Publisher<? extends T>[] a = array;
+		Flow.Publisher<? extends T>[] a = array;
 		int n;
 		if (a == null) {
 			n = 0;
-			a = new Publisher[8];
+			a = new Flow.Publisher[8];
 
-			Iterator<? extends Publisher<? extends T>> it;
+			Iterator<? extends Flow.Publisher<? extends T>> it;
 
 			try {
 				it = Objects.requireNonNull(iterable.iterator(), "The iterator returned is null");
@@ -117,7 +117,7 @@ final class MonoFirstWithValue<T> extends Mono<T> implements SourceProducer<T> {
 					break;
 				}
 
-				Publisher<? extends T> p;
+				Flow.Publisher<? extends T> p;
 
 				try {
 					p = Objects.requireNonNull(it.next(),
@@ -130,7 +130,7 @@ final class MonoFirstWithValue<T> extends Mono<T> implements SourceProducer<T> {
 				}
 
 				if (n == a.length) {
-					Publisher<? extends T>[] c = new Publisher[n + (n >> 2)];
+					Flow.Publisher<? extends T>[] c = new Flow.Publisher[n + (n >> 2)];
 					System.arraycopy(a, 0, c, 0, n);
 					a = c;
 				}
@@ -147,7 +147,7 @@ final class MonoFirstWithValue<T> extends Mono<T> implements SourceProducer<T> {
 			return;
 		}
 		if (n == 1) {
-			Publisher<? extends T> p = a[0];
+			Flow.Publisher<? extends T> p = a[0];
 
 			if (p == null) {
 				Operators.error(actual,

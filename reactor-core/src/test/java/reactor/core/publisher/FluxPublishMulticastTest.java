@@ -19,11 +19,11 @@ package reactor.core.publisher;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -256,7 +256,7 @@ public class FluxPublishMulticastTest extends FluxOperatorTest<String, String> {
 		CoreSubscriber<Integer> s = new CoreSubscriber<Integer>() {
 			@Override
 			public void onSubscribe(
-					Subscription s) {
+					Flow.Subscription s) {
 				s.request(Long.MAX_VALUE);
 			}
 
@@ -312,7 +312,7 @@ public class FluxPublishMulticastTest extends FluxOperatorTest<String, String> {
     public void scanMulticaster() {
         FluxPublishMulticast.FluxPublishMulticaster<Integer> test =
         		new FluxPublishMulticast.FluxPublishMulticaster<>(123, Queues.<Integer>unbounded(), Context.empty());
-        Subscription parent = Operators.emptySubscription();
+        Flow.Subscription parent = Operators.emptySubscription();
         test.onSubscribe(parent);
 
         assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(parent);
@@ -360,7 +360,7 @@ public class FluxPublishMulticastTest extends FluxOperatorTest<String, String> {
         		new FluxPublishMulticast.FluxPublishMulticaster<>(123, Queues.<Integer>unbounded(), Context.empty());
         FluxPublishMulticast.CancelMulticaster<Integer> test =
         		new FluxPublishMulticast.CancelMulticaster<>(actual, parent);
-        Subscription sub = Operators.emptySubscription();
+        Flow.Subscription sub = Operators.emptySubscription();
         test.onSubscribe(sub);
 
         assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(sub);
@@ -375,7 +375,7 @@ public class FluxPublishMulticastTest extends FluxOperatorTest<String, String> {
         		new FluxPublishMulticast.FluxPublishMulticaster<>(123, Queues.<Integer>unbounded(), Context.empty());
         FluxPublishMulticast.CancelFuseableMulticaster<Integer> test =
         		new FluxPublishMulticast.CancelFuseableMulticaster<>(actual, parent);
-        Subscription sub = Operators.emptySubscription();
+        Flow.Subscription sub = Operators.emptySubscription();
         test.onSubscribe(sub);
 
         assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(sub);

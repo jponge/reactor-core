@@ -19,11 +19,12 @@ package reactor.core.publisher;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Flow;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
+
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
@@ -36,7 +37,7 @@ import static reactor.core.publisher.Sinks.EmitFailureHandler.FAIL_FAST;
 
 public class FluxWindowBoundaryTest {
 
-	static <T> AssertSubscriber<T> toList(Publisher<T> windows) {
+	static <T> AssertSubscriber<T> toList(Flow.Publisher<T> windows) {
 		AssertSubscriber<T> ts = AssertSubscriber.create();
 		windows.subscribe(ts);
 		return ts;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2021-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package reactor.core.publisher;
 
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.openjdk.jcstress.annotations.Actor;
@@ -24,8 +25,6 @@ import org.openjdk.jcstress.annotations.JCStressTest;
 import org.openjdk.jcstress.annotations.Outcome;
 import org.openjdk.jcstress.annotations.State;
 import org.openjdk.jcstress.infra.results.II_Result;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
 
 import static org.openjdk.jcstress.annotations.Expect.ACCEPTABLE;
 import static org.openjdk.jcstress.annotations.Expect.FORBIDDEN;
@@ -38,13 +37,13 @@ public abstract class FluxMergeStressTest {
 	@State
 	public static class MergeCompleteErrorStressTest {
 
-		final AtomicReference<Subscriber<? super Integer>> actual1 = new AtomicReference<>();
-		final AtomicReference<Subscriber<? super Integer>> actual2 = new AtomicReference<>();
+		final AtomicReference<Flow.Subscriber<? super Integer>> actual1 = new AtomicReference<>();
+		final AtomicReference<Flow.Subscriber<? super Integer>> actual2 = new AtomicReference<>();
 
 		final StressSubscriber<Integer> subscriber = new StressSubscriber<Integer>(1L);
 
 		{
-			final Flux<Integer> merged = Flux.merge((Publisher<Integer>) actual1::set, (Publisher<Integer>) actual2::set);
+			final Flux<Integer> merged = Flux.merge((Flow.Publisher<Integer>) actual1::set, (Flow.Publisher<Integer>) actual2::set);
 			merged.subscribe(subscriber);
 		}
 

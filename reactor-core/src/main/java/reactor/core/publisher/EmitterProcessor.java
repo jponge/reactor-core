@@ -19,13 +19,12 @@ package reactor.core.publisher;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.stream.Stream;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -45,7 +44,7 @@ import static reactor.core.publisher.FluxPublish.PublishSubscriber.TERMINATED;
  * drain loops.
  * <p>
  * The default {@link #create} factories will only produce the new elements observed in
- * the parent sequence after a given {@link Subscriber} is subscribed.
+ * the parent sequence after a given {@link Flow.Subscriber} is subscribed.
  * <p>
  * <p>
  * <img width="640" src="https://raw.githubusercontent.com/reactor/reactor-core/v3.1.3.RELEASE/src/docs/marble/emitter.png"
@@ -57,7 +56,7 @@ import static reactor.core.publisher.FluxPublish.PublishSubscriber.TERMINATED;
  * @author Stephane Maldini
  * @deprecated To be removed in 3.5. Prefer clear cut usage of {@link Sinks} through
  * variations of {@link Sinks.MulticastSpec#onBackpressureBuffer() Sinks.many().multicast().onBackpressureBuffer()}.
- * If you really need the subscribe-to-upstream functionality of a {@link org.reactivestreams.Processor}, switch
+ * If you really need the subscribe-to-upstream functionality of a {@link Flow.Processor}, switch
  * to {@link Sinks.ManyWithUpstream} with {@link Sinks#unsafe()} variants of {@link Sinks.RootSpec#manyWithUpstream() Sinks.unsafe().manyWithUpstream()}.
  * <p/>This processor was blocking in {@link EmitterProcessor#onNext(Object)}. This behaviour can be implemented with the {@link Sinks} API by calling
  * {@link Sinks.Many#tryEmitNext(Object)} and retrying, e.g.:
@@ -140,11 +139,11 @@ public final class EmitterProcessor<T> extends FluxProcessor<T, T> implements In
 
 	final boolean autoCancel;
 
-	volatile Subscription s;
+	volatile Flow.Subscription s;
 	@SuppressWarnings("rawtypes")
-	static final AtomicReferenceFieldUpdater<EmitterProcessor, Subscription> S =
+	static final AtomicReferenceFieldUpdater<EmitterProcessor, Flow.Subscription> S =
 			AtomicReferenceFieldUpdater.newUpdater(EmitterProcessor.class,
-					Subscription.class,
+					Flow.Subscription.class,
 					"s");
 
 	volatile FluxPublish.PubSubInner<T>[] subscribers;
@@ -375,7 +374,7 @@ public final class EmitterProcessor<T> extends FluxProcessor<T, T> implements In
 	}
 
 	@Override
-	public void onSubscribe(final Subscription s) {
+	public void onSubscribe(final Flow.Subscription s) {
 		//since the CoreSubscriber nature isn't exposed to the user, the only path to onSubscribe is
 		//already guarded by UPSTREAM_DISPOSABLE. just in case the publisher misbehaves we still use setOnce
 		if (Operators.setOnce(S, this, s)) {

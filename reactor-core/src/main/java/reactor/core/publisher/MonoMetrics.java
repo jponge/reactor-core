@@ -17,9 +17,11 @@
 package reactor.core.publisher;
 
 import io.micrometer.core.instrument.*;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.util.Metrics;
+
+import java.util.concurrent.Flow;
 
 /**
  * Activate metrics gathering on a {@link Mono}, assumes Micrometer is on the classpath.

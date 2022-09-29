@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,14 @@ package reactor.core.publisher;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
 import reactor.core.Fuseable;
@@ -46,7 +46,7 @@ import static reactor.core.Exceptions.TERMINATED;
  */
 final class FluxConcatMap<T, R> extends InternalFluxOperator<T, R> {
 
-	final Function<? super T, ? extends Publisher<? extends R>> mapper;
+	final Function<? super T, ? extends Flow.Publisher<? extends R>> mapper;
 
 	final Supplier<? extends Queue<T>> queueSupplier;
 
@@ -71,7 +71,7 @@ final class FluxConcatMap<T, R> extends InternalFluxOperator<T, R> {
 	}
 
 	static <T, R> CoreSubscriber<T> subscriber(CoreSubscriber<? super R> s,
-			Function<? super T, ? extends Publisher<? extends R>> mapper,
+			Function<? super T, ? extends Flow.Publisher<? extends R>> mapper,
 			Supplier<? extends Queue<T>> queueSupplier,
 			int prefetch, ErrorMode errorMode) {
 		switch (errorMode) {
@@ -93,7 +93,7 @@ final class FluxConcatMap<T, R> extends InternalFluxOperator<T, R> {
 	}
 
 	FluxConcatMap(Flux<? extends T> source,
-			Function<? super T, ? extends Publisher<? extends R>> mapper,
+			Function<? super T, ? extends Flow.Publisher<? extends R>> mapper,
 			Supplier<? extends Queue<T>> queueSupplier,
 			int prefetch,
 			ErrorMode errorMode) {
@@ -135,7 +135,7 @@ final class FluxConcatMap<T, R> extends InternalFluxOperator<T, R> {
 
 		final ConcatMapInner<R> inner;
 
-		final Function<? super T, ? extends Publisher<? extends R>> mapper;
+		final Function<? super T, ? extends Flow.Publisher<? extends R>> mapper;
 
 		final Supplier<? extends Queue<T>> queueSupplier;
 
@@ -175,7 +175,7 @@ final class FluxConcatMap<T, R> extends InternalFluxOperator<T, R> {
 		int sourceMode;
 
 		ConcatMapImmediate(CoreSubscriber<? super R> actual,
-				Function<? super T, ? extends Publisher<? extends R>> mapper,
+				Function<? super T, ? extends Flow.Publisher<? extends R>> mapper,
 				Supplier<? extends Queue<T>> queueSupplier, int prefetch) {
 			this.actual = actual;
 			this.ctx = actual.currentContext();
@@ -370,7 +370,7 @@ final class FluxConcatMap<T, R> extends InternalFluxOperator<T, R> {
 						}
 
 						if (!empty) {
-							Publisher<? extends R> p;
+							Flow.Publisher<? extends R> p;
 
 							try {
 								p = Objects.requireNonNull(mapper.apply(v),
@@ -494,7 +494,7 @@ final class FluxConcatMap<T, R> extends InternalFluxOperator<T, R> {
 
 		final ConcatMapInner<R> inner;
 
-		final Function<? super T, ? extends Publisher<? extends R>> mapper;
+		final Function<? super T, ? extends Flow.Publisher<? extends R>> mapper;
 
 		final Supplier<? extends Queue<T>> queueSupplier;
 
@@ -531,7 +531,7 @@ final class FluxConcatMap<T, R> extends InternalFluxOperator<T, R> {
 		int sourceMode;
 
 		ConcatMapDelayed(CoreSubscriber<? super R> actual,
-				Function<? super T, ? extends Publisher<? extends R>> mapper,
+				Function<? super T, ? extends Flow.Publisher<? extends R>> mapper,
 				Supplier<? extends Queue<T>> queueSupplier,
 				int prefetch, boolean veryEnd) {
 			this.actual = actual;
@@ -730,7 +730,7 @@ final class FluxConcatMap<T, R> extends InternalFluxOperator<T, R> {
 						}
 
 						if (!empty) {
-							Publisher<? extends R> p;
+							Flow.Publisher<? extends R> p;
 
 							try {
 								p = Objects.requireNonNull(mapper.apply(v),

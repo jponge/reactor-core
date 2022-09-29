@@ -22,11 +22,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
 import reactor.core.Fuseable;
@@ -279,7 +279,7 @@ public class FluxOnBackpressureBufferTest
         FluxOnBackpressureBuffer.BackpressureBufferSubscriber<Integer> test =
         		new FluxOnBackpressureBuffer.BackpressureBufferSubscriber<>(actual,
         				123, false, t -> {});
-        Subscription parent = Operators.emptySubscription();
+        Flow.Subscription parent = Operators.emptySubscription();
         test.onSubscribe(parent);
 
         assertThat(test.scan(Scannable.Attr.ACTUAL)).isSameAs(actual);

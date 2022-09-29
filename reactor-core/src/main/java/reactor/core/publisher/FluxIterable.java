@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Spliterator;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
-
-import org.reactivestreams.Subscriber;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
@@ -246,7 +245,7 @@ final class FluxIterable<T> extends Flux<T> implements Fuseable, SourceProducer<
 
 		void slowPath(long n) {
 			final Iterator<? extends T> a = iterator;
-			final Subscriber<? super T> s = actual;
+			final Flow.Subscriber<? super T> s = actual;
 
 			long e = 0L;
 
@@ -313,7 +312,7 @@ final class FluxIterable<T> extends Flux<T> implements Fuseable, SourceProducer<
 
 		void fastPath() {
 			final Iterator<? extends T> a = iterator;
-			final Subscriber<? super T> s = actual;
+			final Flow.Subscriber<? super T> s = actual;
 
 			for (; ; ) {
 

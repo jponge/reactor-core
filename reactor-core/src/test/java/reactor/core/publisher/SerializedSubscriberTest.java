@@ -18,12 +18,12 @@ package reactor.core.publisher;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 
 import reactor.core.Scannable;
 import reactor.core.scheduler.Schedulers;
@@ -166,7 +166,7 @@ public class SerializedSubscriberTest {
 	public void scanSerializedSubscriber() {
 		LambdaSubscriber<String> actual = new LambdaSubscriber<>(null, e -> { }, null, null);
 		SerializedSubscriber<String> test = new SerializedSubscriber<>(actual);
-		Subscription subscription = Operators.emptySubscription();
+		Flow.Subscription subscription = Operators.emptySubscription();
 		test.onSubscribe(subscription);
 
 		assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(subscription);

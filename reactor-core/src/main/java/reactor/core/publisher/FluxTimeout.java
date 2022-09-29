@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,13 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.function.Function;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.util.annotation.Nullable;
@@ -43,17 +42,17 @@ import reactor.util.context.Context;
  */
 final class FluxTimeout<T, U, V> extends InternalFluxOperator<T, T> {
 
-	final Publisher<U> firstTimeout;
+	final Flow.Publisher<U> firstTimeout;
 
-	final Function<? super T, ? extends Publisher<V>> itemTimeout;
+	final Function<? super T, ? extends Flow.Publisher<V>> itemTimeout;
 
-	final Publisher<? extends T> other;
+	final Flow.Publisher<? extends T> other;
 
 	final String timeoutDescription; //only useful when no `other`
 
 	FluxTimeout(Flux<? extends T> source,
-			Publisher<U> firstTimeout,
-			Function<? super T, ? extends Publisher<V>> itemTimeout,
+			Flow.Publisher<U> firstTimeout,
+			Function<? super T, ? extends Flow.Publisher<V>> itemTimeout,
 			String timeoutDescription) {
 		super(source);
 		this.firstTimeout = Objects.requireNonNull(firstTimeout, "firstTimeout");
@@ -65,9 +64,9 @@ final class FluxTimeout<T, U, V> extends InternalFluxOperator<T, T> {
 	}
 
 	FluxTimeout(Flux<? extends T> source,
-			Publisher<U> firstTimeout,
-			Function<? super T, ? extends Publisher<V>> itemTimeout,
-			Publisher<? extends T> other) {
+			Flow.Publisher<U> firstTimeout,
+			Function<? super T, ? extends Flow.Publisher<V>> itemTimeout,
+			Flow.Publisher<? extends T> other) {
 		super(source);
 		this.firstTimeout = Objects.requireNonNull(firstTimeout, "firstTimeout");
 		this.itemTimeout = Objects.requireNonNull(itemTimeout, "itemTimeout");
@@ -81,8 +80,8 @@ final class FluxTimeout<T, U, V> extends InternalFluxOperator<T, T> {
 	}
 
 	@Nullable
-	static String addNameToTimeoutDescription(Publisher<?> source,
-			@Nullable  String timeoutDescription) {
+	static String addNameToTimeoutDescription(Flow.Publisher<?> source,
+                                              @Nullable  String timeoutDescription) {
 		if (timeoutDescription == null) {
 			return null;
 		}
@@ -105,11 +104,11 @@ final class FluxTimeout<T, U, V> extends InternalFluxOperator<T, T> {
 	static final class TimeoutMainSubscriber<T, V>
 			extends Operators.MultiSubscriptionSubscriber<T, T> {
 
-		final Publisher<?> firstTimeout;
+		final Flow.Publisher<?> firstTimeout;
 
-		final Function<? super T, ? extends Publisher<V>> itemTimeout;
+		final Function<? super T, ? extends Flow.Publisher<V>> itemTimeout;
 
-		final Publisher<? extends T> other;
+		final Flow.Publisher<? extends T> other;
 		final String timeoutDescription; //only useful/non-null when no `other`
 
 		Subscription s;
@@ -129,9 +128,9 @@ final class FluxTimeout<T, U, V> extends InternalFluxOperator<T, T> {
 
 		TimeoutMainSubscriber(
 				CoreSubscriber<? super T> actual,
-				Publisher<?> firstTimeout,
-				Function<? super T, ? extends Publisher<V>> itemTimeout,
-				@Nullable Publisher<? extends T> other,
+				Flow.Publisher<?> firstTimeout,
+				Function<? super T, ? extends Flow.Publisher<V>> itemTimeout,
+				@Nullable Flow.Publisher<? extends T> other,
 				@Nullable String timeoutDescription
 		) {
 			super(Operators.serialize(actual));
@@ -181,7 +180,7 @@ final class FluxTimeout<T, U, V> extends InternalFluxOperator<T, T> {
 
 			producedOne();
 
-			Publisher<? extends V> p;
+			Flow.Publisher<? extends V> p;
 
 			try {
 				p = Objects.requireNonNull(itemTimeout.apply(t),

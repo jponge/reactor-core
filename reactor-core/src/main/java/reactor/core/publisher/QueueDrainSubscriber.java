@@ -17,10 +17,11 @@
 package reactor.core.publisher;
 
 import java.util.Queue;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
 import reactor.core.Exceptions;
@@ -196,7 +197,7 @@ abstract class QueueDrainSubscriber<T, U, V> extends QueueDrainSubscriberPad4
 	 * @param qd the QueueDrain instance that gives status information to the drain logic
 	 */
 	static <Q, S> void drainMaxLoop(Queue<Q> q, Subscriber<? super S> a, boolean delayError,
-			Disposable dispose, QueueDrainSubscriber<?, Q, S> qd) {
+                                    Disposable dispose, QueueDrainSubscriber<?, Q, S> qd) {
 		int missed = 1;
 
 		for (;;) {

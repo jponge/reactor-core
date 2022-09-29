@@ -28,7 +28,7 @@ import org.openjdk.jcstress.annotations.Result;
 import org.openjdk.jcstress.annotations.State;
 import org.openjdk.jcstress.infra.results.LLLLL_Result;
 import org.openjdk.jcstress.infra.results.LLLL_Result;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.util.FastLogger;
 

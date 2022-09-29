@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2017-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,13 +26,14 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
+
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
@@ -705,7 +706,7 @@ class FluxOnAssemblyTest {
 	@Test
 	void checkpointedPublisher() {
 		StringWriter sw = new StringWriter();
-		Publisher<?> tested = Flux
+		Flow.Publisher<?> tested = Flux
 				.just(1, 2)
 				.doOnNext(__ -> {
 					throw new RuntimeException("Boom");
@@ -732,7 +733,7 @@ class FluxOnAssemblyTest {
 
 	@Test
 	void onAssemblyExceptionMessage() {
-		Publisher<?> tested = Flux.just(1, 2)
+		Flow.Publisher<?> tested = Flux.just(1, 2)
 		                          .doOnNext(__ -> {
 			                          throw new RuntimeException("Boom");
 		                          })
@@ -745,7 +746,7 @@ class FluxOnAssemblyTest {
 
 	@Test
 	void onAssemblyExceptionMessageWhenMessageIsNull() {
-		Publisher<?> tested = Flux.just(1, 2)
+		Flow.Publisher<?> tested = Flux.just(1, 2)
 		                          .doOnNext(__ -> {
 			                          throw new FluxOnAssembly.OnAssemblyException(null);
 		                          });

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,12 @@ package reactor.core.publisher;
 
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.stream.Stream;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.util.annotation.Nullable;
@@ -199,8 +200,8 @@ final class FluxFirstWithSignal<T> extends Flux<T> implements SourceProducer<T> 
 		}
 
 		void subscribe(Publisher<? extends T>[] sources,
-				int n,
-				CoreSubscriber<? super T> actual) {
+                       int n,
+                       CoreSubscriber<? super T> actual) {
 			FirstEmittingSubscriber<T>[] a = subscribers;
 
 			for (int i = 0; i < n; i++) {

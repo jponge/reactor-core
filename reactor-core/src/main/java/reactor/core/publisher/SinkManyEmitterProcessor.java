@@ -19,13 +19,12 @@ package reactor.core.publisher;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.stream.Stream;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -45,7 +44,7 @@ import static reactor.core.publisher.FluxPublish.PublishSubscriber.TERMINATED;
  * drain loops.
  * <p>
  * The default {@link #create} factories will only produce the new elements observed in
- * the parent sequence after a given {@link Subscriber} is subscribed.
+ * the parent sequence after a given {@link Flow.Subscriber} is subscribed.
  * <p>
  * <p>
  * <img width="640" src="https://raw.githubusercontent.com/reactor/reactor-core/v3.1.3.RELEASE/src/docs/marble/emitter.png"
@@ -66,7 +65,7 @@ final class SinkManyEmitterProcessor<T> extends Flux<T> implements InternalManyS
 
 	final boolean autoCancel;
 
-	volatile Subscription                                                            s;
+	volatile Subscription s;
 	@SuppressWarnings("rawtypes")
 	static final AtomicReferenceFieldUpdater<SinkManyEmitterProcessor, Subscription> S =
 			AtomicReferenceFieldUpdater.newUpdater(SinkManyEmitterProcessor.class,
@@ -153,7 +152,7 @@ final class SinkManyEmitterProcessor<T> extends Flux<T> implements InternalManyS
 	}
 
 	@Override
-	public Disposable subscribeTo(Publisher<? extends T> upstream) {
+	public Disposable subscribeTo(Flow.Publisher<? extends T> upstream) {
 		EmitterDisposable ed = new EmitterDisposable(this);
 		if (UPSTREAM_DISPOSABLE.compareAndSet(this, null, ed)) {
 			upstream.subscribe(this);

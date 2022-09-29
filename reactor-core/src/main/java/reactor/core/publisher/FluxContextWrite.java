@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,8 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.function.Function;
-
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Fuseable;
@@ -59,7 +58,7 @@ final class FluxContextWrite<T> extends InternalFluxOperator<T, T> implements Fu
 		final Context                          context;
 
 		QueueSubscription<T> qs;
-		Subscription         s;
+		Flow.Subscription s;
 
 		@SuppressWarnings("unchecked")
 		ContextWriteSubscriber(CoreSubscriber<? super T> actual, Context context) {
@@ -92,7 +91,7 @@ final class FluxContextWrite<T> extends InternalFluxOperator<T, T> implements Fu
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.validate(this.s, s)) {
 				this.s = s;
 				if (s instanceof QueueSubscription) {

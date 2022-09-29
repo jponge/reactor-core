@@ -21,13 +21,12 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Hooks;
@@ -613,7 +612,7 @@ public class ScannableTest {
 
 	@Test
 	public void operatorChainWithLastSubscriber() {
-		AtomicReference<Subscription> subRef = new AtomicReference<>(null);
+		AtomicReference<Flow.Subscription> subRef = new AtomicReference<>(null);
 
 		Mono<String> m=
 				Flux.just("foo")
@@ -724,7 +723,7 @@ public class ScannableTest {
 				.as("publisher chain")
 				.containsExactly("source(FluxJust)", "filter", "map");
 
-		AtomicReference<Subscription> subRef = new AtomicReference<>();
+		AtomicReference<Flow.Subscription> subRef = new AtomicReference<>();
 		f.doOnSubscribe(subRef::set)
 		 .blockLast();
 		assertThat(Scannable.from(subRef.get()).steps())
@@ -748,7 +747,7 @@ public class ScannableTest {
 						"Flux.map ⇢ at reactor.core.ScannableTest.stepNameSmokeTestWithDebugMode(ScannableTest.java:"+ (line+3) + ")"
 				);
 
-		AtomicReference<Subscription> subRef = new AtomicReference<>();
+		AtomicReference<Flow.Subscription> subRef = new AtomicReference<>();
 		f.doOnSubscribe(subRef::set)
 		 .blockLast();
 		assertThat(Scannable.from(subRef.get()).steps())

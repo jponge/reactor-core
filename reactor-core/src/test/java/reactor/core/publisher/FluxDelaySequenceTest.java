@@ -18,12 +18,12 @@ package reactor.core.publisher;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.core.publisher.FluxDelaySequence.DelaySubscriber;
@@ -264,7 +264,7 @@ public class FluxDelaySequenceTest {
 		Scheduler.Worker worker = Schedulers.immediate().createWorker();
 
 		CoreSubscriber<String> actual = new LambdaSubscriber<>(null, null, null, null);
-		Subscription s = Operators.emptySubscription();
+		Flow.Subscription s = Operators.emptySubscription();
 
 		FluxDelaySequence.DelaySubscriber test = new DelaySubscriber<>(actual, Duration.ofSeconds(1), worker);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 package reactor.core.publisher;
 
-import org.reactivestreams.Subscription;
-
 import reactor.core.CoreSubscriber;
 import reactor.util.annotation.Nullable;
+
+import java.util.concurrent.Flow;
 
 /**
  * Subscriber that makes sure signals are delivered sequentially in case the onNext, onError or onComplete methods are
@@ -51,14 +51,14 @@ final class SerializedSubscriber<T> implements InnerOperator<T, T> {
 
 	Throwable error;
 
-	Subscription s;
+	Flow.Subscription s;
 
 	SerializedSubscriber(CoreSubscriber<? super T> actual) {
 		this.actual = actual;
 	}
 
 	@Override
-	public void onSubscribe(Subscription s) {
+	public void onSubscribe(Flow.Subscription s) {
 		if (Operators.validate(this.s, s)) {
 			this.s = s;
 

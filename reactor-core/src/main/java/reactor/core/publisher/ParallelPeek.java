@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 package reactor.core.publisher;
 
+import java.util.concurrent.Flow;
 import java.util.function.Consumer;
 import java.util.function.LongConsumer;
 
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Fuseable;
 import reactor.util.annotation.Nullable;
@@ -38,7 +38,7 @@ final class ParallelPeek<T> extends ParallelFlux<T> implements SignalPeek<T>{
 	final Consumer<? super Throwable> onError;
 	final Runnable onComplete;
 	final Runnable onAfterTerminated;
-	final Consumer<? super Subscription> onSubscribe;
+	final Consumer<? super Flow.Subscription> onSubscribe;
 	final LongConsumer onRequest;
 	final Runnable onCancel;
 
@@ -48,7 +48,7 @@ final class ParallelPeek<T> extends ParallelFlux<T> implements SignalPeek<T>{
 			@Nullable Consumer<? super Throwable> onError,
 			@Nullable Runnable onComplete,
 			@Nullable Runnable onAfterTerminated,
-			@Nullable Consumer<? super Subscription> onSubscribe,
+			@Nullable Consumer<? super Flow.Subscription> onSubscribe,
 			@Nullable LongConsumer onRequest,
 			@Nullable Runnable onCancel
 	) {
@@ -102,7 +102,7 @@ final class ParallelPeek<T> extends ParallelFlux<T> implements SignalPeek<T>{
 
 	@Override
 	@Nullable
-	public Consumer<? super Subscription> onSubscribeCall() {
+	public Consumer<? super Flow.Subscription> onSubscribeCall() {
 		return onSubscribe;
 	}
 

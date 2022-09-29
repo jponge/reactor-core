@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ package reactor.core.publisher;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Flow;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.test.StepVerifier;
@@ -274,7 +274,7 @@ public class FluxSkipUntilOtherTest extends FluxOperatorTest<String, String> {
         CoreSubscriber<Integer> actual = new LambdaSubscriber<>(null, e -> {}, null, null);
         FluxSkipUntilOther.SkipUntilMainSubscriber<Integer> test =
         		new FluxSkipUntilOther.SkipUntilMainSubscriber<>(actual);
-        Subscription parent = Operators.emptySubscription();
+        Flow.Subscription parent = Operators.emptySubscription();
         test.onSubscribe(parent);
 
         Assertions.assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(parent);
@@ -295,7 +295,7 @@ public class FluxSkipUntilOtherTest extends FluxOperatorTest<String, String> {
         		new FluxSkipUntilOther.SkipUntilMainSubscriber<>(actual);
         FluxSkipUntilOther.SkipUntilOtherSubscriber<Integer> test =
         		new FluxSkipUntilOther.SkipUntilOtherSubscriber<>(main);
-        Subscription parent = Operators.emptySubscription();
+        Flow.Subscription parent = Operators.emptySubscription();
         test.onSubscribe(parent);
 
         Assertions.assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(parent);

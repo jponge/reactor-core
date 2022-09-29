@@ -17,13 +17,13 @@
 package reactor.core.publisher;
 
 import java.time.Duration;
+import java.util.concurrent.Flow;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -219,7 +219,7 @@ public class MonoSubscribeOnTest {
 					actual = new LambdaMonoSubscriber<>(null, e -> {}, null, null);
 			MonoSubscribeOn.SubscribeOnSubscriber<String> test = new MonoSubscribeOn.SubscribeOnSubscriber<>(
 					source, actual, worker);
-			Subscription parent = Operators.emptySubscription();
+			Flow.Subscription parent = Operators.emptySubscription();
 			test.onSubscribe(parent);
 
 			test.requested = 3L;

@@ -18,13 +18,13 @@ package reactor.core.publisher;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 
 import reactor.core.Fuseable;
 import reactor.core.Scannable;
@@ -170,7 +170,7 @@ public class MonoCallableTest {
 	public void callableCancelledBeforeRun() {
 		AtomicBoolean actual = new AtomicBoolean(true);
 		Mono<?> mono = Mono.fromCallable(() -> actual.getAndSet(false))
-				.doOnSubscribe(Subscription::cancel);
+				.doOnSubscribe(Flow.Subscription::cancel);
 
 		StepVerifier.create(mono)
 				.expectSubscription()

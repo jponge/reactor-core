@@ -16,12 +16,12 @@
 
 package reactor.test.publisher;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.publisher.BaseSubscriber;
 import reactor.core.publisher.Flux;
@@ -88,7 +88,7 @@ public class DefaultTestPublisherTests {
 		TestPublisher<String> publisher = TestPublisher.create();
 		AtomicLong count = new AtomicLong();
 
-		Subscriber<String> subscriber = new CoreSubscriber<String>() {
+		Flow.Subscriber<String> subscriber = new CoreSubscriber<String>() {
 			@Override
 			public void onSubscribe(Subscription s) { }
 
@@ -114,7 +114,7 @@ public class DefaultTestPublisherTests {
 		assertThat(count).hasValue(1);
 	}
 
-	private Subscriber<String> countingSubscriber(AtomicLong count) {
+	private Flow.Subscriber<String> countingSubscriber(AtomicLong count) {
 		return new CoreSubscriber<String>() {
 			@Override
 			public void onSubscribe(Subscription s) {
@@ -141,7 +141,7 @@ public class DefaultTestPublisherTests {
 	public void misbehavingAllowsMultipleTerminations() {
 		TestPublisher<String> publisher = TestPublisher.createNoncompliant(Violation.CLEANUP_ON_TERMINATE);
 		AtomicLong count = new AtomicLong();
-		Subscriber<String> subscriber = countingSubscriber(count);
+		Flow.Subscriber<String> subscriber = countingSubscriber(count);
 
 		publisher.subscribe(subscriber);
 
@@ -158,7 +158,7 @@ public class DefaultTestPublisherTests {
 	public void misbehavingMonoAllowsMultipleTerminations() {
 		TestPublisher<String> publisher = TestPublisher.createNoncompliant(Violation.CLEANUP_ON_TERMINATE);
 		AtomicLong count = new AtomicLong();
-		Subscriber<String> subscriber = countingSubscriber(count);
+		Flow.Subscriber<String> subscriber = countingSubscriber(count);
 
 		publisher.mono().subscribe(subscriber);
 
@@ -176,7 +176,7 @@ public class DefaultTestPublisherTests {
 		TestPublisher<String> publisher = TestPublisher.createNoncompliant(Violation.CLEANUP_ON_TERMINATE);
 		AtomicLong count = new AtomicLong();
 
-		Subscriber<String> subscriber = countingSubscriber(count);
+		Flow.Subscriber<String> subscriber = countingSubscriber(count);
 
 		publisher.flux().subscribe(subscriber);
 

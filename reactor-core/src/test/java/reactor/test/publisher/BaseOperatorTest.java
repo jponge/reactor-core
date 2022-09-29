@@ -19,6 +19,7 @@ package reactor.test.publisher;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -29,9 +30,8 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingConsumer;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+
+import java.util.concurrent.Flow.Subscriber;
 
 import reactor.core.Exceptions;
 import reactor.core.Fuseable;
@@ -55,7 +55,7 @@ import static reactor.core.publisher.Sinks.EmitFailureHandler.FAIL_FAST;
 /**
  * @author Stephane Maldini
  */
-public abstract class BaseOperatorTest<I, PI extends Publisher<? extends I>, O, PO extends Publisher<? extends O>> {
+public abstract class BaseOperatorTest<I, PI extends Flow.Publisher<? extends I>, O, PO extends Flow.Publisher<? extends O>> {
 
 	static final Logger LOGGER = Loggers.getLogger(BaseOperatorTest.class);
 
@@ -78,22 +78,22 @@ public abstract class BaseOperatorTest<I, PI extends Publisher<? extends I>, O, 
 					.receiverDemand(0);
 
 			this.inputHiddenOutputBackpressured(scenario)
-					.consumeSubscriptionWith(Subscription::cancel)
+					.consumeSubscriptionWith(Flow.Subscription::cancel)
 					.thenCancel()
 					.verify();
 
 			this.inputHidden(scenario)
-					.consumeSubscriptionWith(Subscription::cancel)
+					.consumeSubscriptionWith(Flow.Subscription::cancel)
 					.thenCancel()
 					.verify();
 
 			this.inputHiddenOutputBackpressured(scenario)
-					.consumeSubscriptionWith(Subscription::cancel)
+					.consumeSubscriptionWith(Flow.Subscription::cancel)
 					.thenCancel()
 					.verify();
 
 			this.inputFusedConditionalOutputConditional(scenario)
-					.consumeSubscriptionWith(Subscription::cancel)
+					.consumeSubscriptionWith(Flow.Subscription::cancel)
 					.thenCancel()
 					.verify();
 
@@ -374,7 +374,7 @@ public abstract class BaseOperatorTest<I, PI extends Publisher<? extends I>, O, 
 
 	abstract PO conditional(PO output);
 
-	abstract PO doOnSubscribe(PO output, Consumer<? super Subscription> doOnSubscribe);
+	abstract PO doOnSubscribe(PO output, Consumer<? super Flow.Subscription> doOnSubscribe);
 
 	final PI anySource(OperatorScenario<I, PI, O, PO> scenario) {
 		if((scenario.fusionMode() & Fuseable.SYNC) != 0 && scenario.producerCount() != -1){

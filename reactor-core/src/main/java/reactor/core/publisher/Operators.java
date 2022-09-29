@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Spliterator;
+import java.util.concurrent.Flow;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
@@ -31,9 +32,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CorePublisher;
 import reactor.core.CoreSubscriber;
@@ -1095,7 +1096,7 @@ public abstract class Operators {
 	 * @return a new scalar {@link Subscription}
 	 */
 	public static <T> Subscription scalarSubscription(CoreSubscriber<? super T> subscriber,
-			T value){
+                                                           T value){
 		return new ScalarSubscription<>(subscriber, value);
 	}
 
@@ -1111,7 +1112,7 @@ public abstract class Operators {
 	 * @return a new scalar {@link Subscription}
 	 */
 	public static <T> Subscription scalarSubscription(CoreSubscriber<? super T> subscriber,
-			T value, String stepName){
+                                                           T value, String stepName){
 		return new ScalarSubscription<>(subscriber, value, stepName);
 	}
 

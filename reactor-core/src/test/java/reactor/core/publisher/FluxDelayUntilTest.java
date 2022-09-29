@@ -17,14 +17,15 @@
 package reactor.core.publisher;
 
 import java.time.Duration;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+
 import reactor.core.Disposable;
 import reactor.test.StepVerifier;
 
@@ -201,7 +202,7 @@ public class FluxDelayUntilTest {
 
 		Disposable s = Flux.just("foo", "bar")
 		                   .delayUntil(v -> Mono.just(1))
-		                   .subscribeWith(new LambdaSubscriber<>(value::set, error::set, () -> {}, Subscription::cancel));
+		                   .subscribeWith(new LambdaSubscriber<>(value::set, error::set, () -> {}, Flow.Subscription::cancel));
 
 		assertThat(value.get()).isNull();
 		assertThat(error.get()).isNull(); //would be a NPE if trigger array wasn't pre-initialized

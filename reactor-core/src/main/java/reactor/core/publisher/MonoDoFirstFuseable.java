@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,17 @@
 
 package reactor.core.publisher;
 
-import org.reactivestreams.Subscriber;
+import java.util.concurrent.Flow.Subscriber;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Fuseable;
 
+import java.util.concurrent.Flow;
+
 /**
- * Hook into the {@link org.reactivestreams.Publisher#subscribe(Subscriber)} of a
+ * Hook into the {@link Flow.Publisher#subscribe(Subscriber)} of a
  * {@link Mono} and execute a provided callback before calling
- * {@link org.reactivestreams.Publisher#subscribe(Subscriber)} directly with the
+ * {@link Flow.Publisher#subscribe(Subscriber)} directly with the
  * {@link CoreSubscriber}.
  *
  * <p>

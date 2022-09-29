@@ -16,11 +16,10 @@
 
 package reactor.core.publisher;
 
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.test.StepVerifier;
@@ -145,7 +144,7 @@ class MonoPublishMulticastTest {
 	void scanMulticaster() {
 		MonoPublishMulticast.MonoPublishMulticaster<Integer> test =
 				new MonoPublishMulticast.MonoPublishMulticaster<>(Context.empty());
-		Subscription parent = Operators.emptySubscription();
+		Flow.Subscription parent = Operators.emptySubscription();
 		test.onSubscribe(parent);
 
 		assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(parent);

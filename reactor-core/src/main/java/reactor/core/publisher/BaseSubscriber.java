@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,11 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
 import reactor.core.Exceptions;
@@ -42,7 +43,7 @@ import reactor.util.context.Context;
  * Most of the time, exceptions triggered inside hooks are propagated to
  * {@link #onError(Throwable)} (unless there is a fatal exception). The class is in the
  * {@code reactor.core.publisher} package, as this subscriber is tied to a single
- * {@link org.reactivestreams.Publisher}.
+ * {@link Flow.Publisher}.
  *
  * @author Simon Baslé
  */
@@ -91,7 +92,7 @@ public abstract class BaseSubscriber<T> implements CoreSubscriber<T>, Subscripti
 
 	/**
 	 * Hook for processing of onNext values. You can call {@link #request(long)} here
-	 * to further request data from the source {@link org.reactivestreams.Publisher} if
+	 * to further request data from the source {@link Flow.Publisher} if
 	 * the {@link #hookOnSubscribe(Subscription) initial request} wasn't unbounded.
 	 * <p>Defaults to doing nothing.
 	 *

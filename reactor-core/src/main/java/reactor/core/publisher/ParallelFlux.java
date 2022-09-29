@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.Flow;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -32,9 +33,9 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.CorePublisher;
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -101,7 +102,7 @@ public abstract class ParallelFlux<T> implements CorePublisher<T> {
 	 * @return the new {@link ParallelFlux} instance
 	 */
 	public static <T> ParallelFlux<T> from(Publisher<? extends T> source,
-			int parallelism) {
+                                           int parallelism) {
 		return from(source,
 				parallelism, Queues.SMALL_BUFFER_SIZE,
 				Queues.small());
@@ -122,9 +123,9 @@ public abstract class ParallelFlux<T> implements CorePublisher<T> {
 	 * @return the new {@link ParallelFlux} instance
 	 */
 	public static <T> ParallelFlux<T> from(Publisher<? extends T> source,
-			int parallelism,
-			int prefetch,
-			Supplier<Queue<T>> queueSupplier) {
+                                           int parallelism,
+                                           int prefetch,
+                                           Supplier<Queue<T>> queueSupplier) {
 		Objects.requireNonNull(queueSupplier, "queueSupplier");
 		Objects.requireNonNull(source, "source");
 
@@ -349,7 +350,7 @@ public abstract class ParallelFlux<T> implements CorePublisher<T> {
 	 * @return the new {@link ParallelFlux} instance
 	 */
 	public final <R> ParallelFlux<R> concatMapDelayError(Function<? super T, ? extends
-			Publisher<? extends R>> mapper) {
+            Publisher<? extends R>> mapper) {
 		return concatMap(mapper, 2, ErrorMode.END);
 	}
 

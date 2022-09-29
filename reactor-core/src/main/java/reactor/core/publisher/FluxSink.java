@@ -16,11 +16,11 @@
 
 package reactor.core.publisher;
 
+import java.util.concurrent.Flow;
 import java.util.function.Function;
 import java.util.function.LongConsumer;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -36,7 +36,7 @@ import reactor.util.context.ContextView;
 public interface FluxSink<T> {
 
 	/**
-	 * Emit a non-null element, generating an {@link Subscriber#onNext(Object) onNext} signal.
+	 * Emit a non-null element, generating an {@link Flow.Subscriber#onNext(Object) onNext} signal.
 	 * <p>
 	 * Might throw an unchecked exception in case of a fatal error downstream which cannot
 	 * be propagated to any asynchronous handler (aka a bubbling exception).
@@ -47,19 +47,19 @@ public interface FluxSink<T> {
 	FluxSink<T> next(T t);
 
 	/**
-	 * Terminate the sequence successfully, generating an {@link Subscriber#onComplete() onComplete}
+	 * Terminate the sequence successfully, generating an {@link Flow.Subscriber#onComplete() onComplete}
 	 * signal.
 	 *
-	 * @see Subscriber#onComplete()
+	 * @see Flow.Subscriber#onComplete()
 	 */
 	void complete();
 
 	/**
-	 * Fail the sequence, generating an {@link Subscriber#onError(Throwable) onError}
+	 * Fail the sequence, generating an {@link Flow.Subscriber#onError(Throwable) onError}
 	 * signal.
 	 *
 	 * @param e the exception to signal, not null
-	 * @see Subscriber#onError(Throwable)
+	 * @see Flow.Subscriber#onError(Throwable)
 	 */
 	void error(Throwable e);
 

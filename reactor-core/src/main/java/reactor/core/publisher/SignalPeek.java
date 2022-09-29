@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 package reactor.core.publisher;
 
+import java.util.concurrent.Flow;
 import java.util.function.Consumer;
 import java.util.function.LongConsumer;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.Scannable;
 import reactor.util.annotation.Nullable;
 import reactor.util.context.Context;
@@ -35,41 +35,41 @@ import reactor.util.context.Context;
 interface SignalPeek<T> extends Scannable {
 
 	/**
-	 * A consumer that will observe {@link Subscriber#onSubscribe(Subscription)}
+	 * A consumer that will observe {@link Flow.Subscriber#onSubscribe(Subscription)}
 	 *
-	 * @return A consumer that will observe {@link Subscriber#onSubscribe(Subscription)}
+	 * @return A consumer that will observe {@link Flow.Subscriber#onSubscribe(Subscription)}
 	 */
 	@Nullable
 	Consumer<? super Subscription> onSubscribeCall();
 
 	/**
-	 * A consumer that will observe {@link Subscriber#onNext(Object)}
+	 * A consumer that will observe {@link Flow.Subscriber#onNext(Object)}
 	 *
-	 * @return A consumer that will observe {@link Subscriber#onNext(Object)}
+	 * @return A consumer that will observe {@link Flow.Subscriber#onNext(Object)}
 	 */
 	@Nullable
 	Consumer<? super T> onNextCall();
 
 	/**
-	 * A consumer that will observe {@link Subscriber#onError(Throwable)}}
+	 * A consumer that will observe {@link Flow.Subscriber#onError(Throwable)}}
 	 *
-	 * @return A consumer that will observe {@link Subscriber#onError(Throwable)}
+	 * @return A consumer that will observe {@link Flow.Subscriber#onError(Throwable)}
 	 */
 	@Nullable
 	Consumer<? super Throwable> onErrorCall();
 
 	/**
-	 * A task that will run on {@link Subscriber#onComplete()}
+	 * A task that will run on {@link Flow.Subscriber#onComplete()}
 	 *
-	 * @return A task that will run on {@link Subscriber#onComplete()}
+	 * @return A task that will run on {@link Flow.Subscriber#onComplete()}
 	 */
 	@Nullable
 	Runnable onCompleteCall();
 
 	/**
-	 * A task will run after termination via {@link Subscriber#onComplete()} or {@link Subscriber#onError(Throwable)}
+	 * A task will run after termination via {@link Flow.Subscriber#onComplete()} or {@link Flow.Subscriber#onError(Throwable)}
 	 *
-	 * @return A task will run after termination via {@link Subscriber#onComplete()} or {@link Subscriber#onError(Throwable)}
+	 * @return A task will run after termination via {@link Flow.Subscriber#onComplete()} or {@link Flow.Subscriber#onError(Throwable)}
 	 */
 	@Nullable
 	Runnable onAfterTerminateCall();
@@ -91,8 +91,8 @@ interface SignalPeek<T> extends Scannable {
 	Runnable onCancelCall();
 
 	/**
-	 * A task that will run after (finally) {@link Subscriber#onNext(Object)}
-	 * @return A task that will run after (finally) {@link Subscriber#onNext(Object)}
+	 * A task that will run after (finally) {@link Flow.Subscriber#onNext(Object)}
+	 * @return A task that will run after (finally) {@link Flow.Subscriber#onNext(Object)}
 	 */
 	@Nullable
 	default Consumer<? super T> onAfterNextCall(){

@@ -17,13 +17,14 @@
 package reactor.core.publisher;
 
 import java.time.Duration;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
@@ -292,7 +293,7 @@ public class MonoFilterWhenTest {
 
 	@Test
 	public void scanTerminatedOnlyTrueIfFilterTerminated() {
-		AtomicReference<Subscriber> subscriber = new AtomicReference<>();
+		AtomicReference<Flow.Subscriber> subscriber = new AtomicReference<>();
 		TestPublisher<Boolean> filter = TestPublisher.create();
 		new MonoFilterWhen<>(new Mono<Integer>() {
 			@Override

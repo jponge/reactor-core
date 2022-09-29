@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2017-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,15 @@
 
 package reactor.core;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscriber;
+
 import reactor.util.context.Context;
+
+import java.util.concurrent.Flow;
 
 /**
  * A {@link Context} aware subscriber which has relaxed rules for §1.3 and §3.9
- * compared to the original {@link org.reactivestreams.Subscriber} from Reactive Streams.
+ * compared to the original {@link Subscriber} from Reactive Streams.
  * If an invalid request {@code <= 0} is done on the received subscription, the request
  * will not produce an onError and will simply be ignored.
  *
@@ -37,7 +39,7 @@ public interface CoreSubscriber<T> extends Subscriber<T> {
 
 	/**
 	 * Request a {@link Context} from dependent components which can include downstream
-	 * operators during subscribing or a terminal {@link org.reactivestreams.Subscriber}.
+	 * operators during subscribing or a terminal {@link Subscriber}.
 	 *
 	 * @return a resolved context or {@link Context#empty()}
 	 */
@@ -47,7 +49,7 @@ public interface CoreSubscriber<T> extends Subscriber<T> {
 
 	/**
 	 * Implementors should initialize any state used by {@link #onNext(Object)} before
-	 * calling {@link Subscription#request(long)}. Should further {@code onNext} related
+	 * calling {@link Flow.Subscription#request(long)}. Should further {@code onNext} related
 	 * state modification occur, thread-safety will be required.
 	 * <p>
 	 *    Note that an invalid request {@code <= 0} will not produce an onError and
@@ -57,5 +59,5 @@ public interface CoreSubscriber<T> extends Subscriber<T> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	void onSubscribe(Subscription s);
+	void onSubscribe(Flow.Subscription s);
 }

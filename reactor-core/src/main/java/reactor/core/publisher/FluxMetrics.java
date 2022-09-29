@@ -17,6 +17,7 @@
 package reactor.core.publisher;
 
 import java.util.List;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -27,8 +28,6 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Tags;
 import io.micrometer.core.instrument.Timer;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
@@ -88,7 +87,7 @@ final class FluxMetrics<T> extends InternalFluxOperator<T, T> {
 		Timer.Sample subscribeToTerminateSample;
 		long         lastNextEventNanos = -1L;
 		boolean      done;
-		Subscription s;
+		Flow.Subscription s;
 
 		MetricsSubscriber(CoreSubscriber<? super T> actual,
 				MeterRegistry registry,
@@ -184,7 +183,7 @@ final class FluxMetrics<T> extends InternalFluxOperator<T, T> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.validate(this.s, s)) {
 				recordOnSubscribe(sequenceName, commonTags, registry);
 				this.subscribeToTerminateSample = Timer.start(clock);
@@ -265,7 +264,7 @@ final class FluxMetrics<T> extends InternalFluxOperator<T, T> {
 	 *
 	 * @return a name
 	 */
-	static String resolveName(Publisher<?> source) {
+	static String resolveName(Flow.Publisher<?> source) {
 		Scannable scannable = Scannable.from(source);
 		if (scannable.isScanAvailable()) {
 			String nameOrDefault = scannable.name();
@@ -291,7 +290,7 @@ final class FluxMetrics<T> extends InternalFluxOperator<T, T> {
 	 *
 	 * @return a {@link Tags} of {@link Tag}
 	 */
-	static Tags resolveTags(Publisher<?> source, Tags tags) {
+	static Tags resolveTags(Flow.Publisher<?> source, Tags tags) {
 		Scannable scannable = Scannable.from(source);
 
 		if (scannable.isScanAvailable()) {

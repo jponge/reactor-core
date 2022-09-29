@@ -17,13 +17,13 @@
 package reactor.core.publisher;
 
 import java.time.Duration;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.reactivestreams.Subscriber;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -31,7 +31,6 @@ import reactor.core.Scannable;
 import reactor.core.TestLoggerExtension;
 import reactor.core.publisher.Sinks.EmitResult;
 import reactor.test.StepVerifier;
-import reactor.test.util.LoggerUtils;
 import reactor.test.util.TestLogger;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -164,7 +163,7 @@ class SinkOneMulticastTest {
 		SinkOneMulticast<String> sink = new SinkOneMulticast<>();
 
 		assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> {
-			sink.subscribe((Subscriber<String>) null);
+			sink.subscribe((Flow.Subscriber<String>) null);
 		});
 	}
 

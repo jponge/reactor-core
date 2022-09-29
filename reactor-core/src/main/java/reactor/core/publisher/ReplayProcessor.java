@@ -18,13 +18,13 @@ package reactor.core.publisher;
 
 import java.time.Duration;
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.stream.Stream;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscriber;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Fuseable;
@@ -308,7 +308,7 @@ public final class ReplayProcessor<T> extends FluxProcessor<T, T>
 
 	final FluxReplay.ReplayBuffer<T> buffer;
 
-	Subscription subscription;
+	Flow.Subscription subscription;
 
 	volatile FluxReplay.ReplaySubscription<T>[] subscribers;
 	@SuppressWarnings("rawtypes")
@@ -423,7 +423,7 @@ public final class ReplayProcessor<T> extends FluxProcessor<T, T>
 	}
 
 	@Override
-	public void onSubscribe(Subscription s) {
+	public void onSubscribe(Flow.Subscription s) {
 		if (buffer.isDone()) {
 			s.cancel();
 		}

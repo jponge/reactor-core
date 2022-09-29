@@ -28,12 +28,14 @@ import org.openjdk.jcstress.infra.results.IZL_Result;
 import org.openjdk.jcstress.infra.results.I_Result;
 import org.openjdk.jcstress.infra.results.JI_Result;
 import org.openjdk.jcstress.infra.results.JJJJJJJ_Result;
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
 import reactor.core.publisher.FluxSwitchMapNoPrefetch.SwitchMapMain;
 import reactor.core.util.FastLogger;
 import reactor.test.publisher.TestPublisher;
+
+import java.util.concurrent.Flow;
 
 import static org.openjdk.jcstress.annotations.Expect.ACCEPTABLE;
 
@@ -101,7 +103,7 @@ public abstract class FluxSwitchMapStressTest {
 		}
 
 		@Override
-		Publisher<Object> handle(Object value) {
+        Publisher<Object> handle(Object value) {
 			return testPublisher;
 		}
 
@@ -192,7 +194,7 @@ public abstract class FluxSwitchMapStressTest {
 		}
 
 		@Override
-		Publisher<Object> handle(Object value) {
+        Publisher<Object> handle(Object value) {
 			return s -> {
 				final StressSubscription subscription =
 						new StressSubscription<>((CoreSubscriber) s);
@@ -283,7 +285,7 @@ public abstract class FluxSwitchMapStressTest {
 		}
 
 		@Override
-		Publisher<Object> handle(Object value) {
+        Publisher<Object> handle(Object value) {
 			return testPublisher;
 		}
 
@@ -332,7 +334,7 @@ public abstract class FluxSwitchMapStressTest {
 
 		@Override
 		@SuppressWarnings({"rawtypes", "unchecked"})
-		Publisher<Object> handle(Object value) {
+        Publisher<Object> handle(Object value) {
 			return (Publisher) Flux.range(((int) value) * 100, 20);
 		}
 
@@ -435,7 +437,7 @@ public abstract class FluxSwitchMapStressTest {
 
 		@Override
 		@SuppressWarnings("rawtypes")
-		Publisher<Object> handle(Object value) {
+        Publisher<Object> handle(Object value) {
 			if ((int) value == 0) {
 				return s -> {
 					final StressSubscription subscription1 =

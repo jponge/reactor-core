@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.Timeout;
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -693,7 +693,7 @@ public class FluxReplayTest extends FluxOperatorTest<String, String> {
 		FluxReplay<Integer> parent = new FluxReplay<>(Flux.just(1), 2, 1000, Schedulers.single());
         FluxReplay.ReplaySubscriber<Integer> test =
 		        new FluxReplay.ReplaySubscriber<>(new FluxReplay.UnboundedReplayBuffer<>(10), parent, 10);
-        Subscription sub = Operators.emptySubscription();
+        Flow.Subscription sub = Operators.emptySubscription();
         test.onSubscribe(sub);
 
         assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(sub);
@@ -794,7 +794,7 @@ public class FluxReplayTest extends FluxOperatorTest<String, String> {
 		}
 
 		@Override
-		protected void hookOnSubscribe(Subscription subscription) {
+		protected void hookOnSubscribe(Flow.Subscription subscription) {
 			request(firstRequest);
 		}
 

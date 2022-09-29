@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2019-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,14 @@ package reactor.core.publisher;
 import java.time.Duration;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.Disposable;
 import reactor.core.Disposables;
@@ -83,7 +84,7 @@ public class TailCallSubscribeTest {
 
     @Test
     public void interop() throws Exception {
-        class CustomOperator implements Publisher<Object> {
+        class CustomOperator implements Flow.Publisher<Object> {
             final Flux<Object> flux;
 
             CustomOperator(Flux<Object> flux) {
@@ -233,7 +234,7 @@ public class TailCallSubscribeTest {
 				);
 	}
 
-    private static class StackCapturingPublisher extends CompletableFuture<StackTraceElement[]> implements Publisher<Object> {
+    private static class StackCapturingPublisher extends CompletableFuture<StackTraceElement[]> implements Flow.Publisher<Object> {
 
         @Override
         public void subscribe(Subscriber<? super Object> subscriber) {

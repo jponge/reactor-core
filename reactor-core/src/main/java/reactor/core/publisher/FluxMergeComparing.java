@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2018-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,14 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
 import reactor.util.annotation.Nullable;
@@ -34,7 +35,7 @@ import reactor.util.concurrent.Queues;
 import reactor.util.context.Context;
 
 /**
- * Merges the provided sources {@link org.reactivestreams.Publisher}, assuming a total order
+ * Merges the provided sources {@link Publisher}, assuming a total order
  * of the values, by picking the smallest available value from each publisher, resulting in
  * a single totally ordered {@link Flux} sequence. This operator considers its primary
  * parent to be the first of the sources, for the purpose of {@link reactor.core.Scannable.Attr#PARENT}.
@@ -404,7 +405,7 @@ final class FluxMergeComparing<T> extends Flux<T> implements SourceProducer<T> {
 
 		volatile boolean done;
 
-		volatile     Subscription                                                           s;
+		volatile Subscription s;
 		@SuppressWarnings("rawtypes")
 		static final AtomicReferenceFieldUpdater<MergeOrderedInnerSubscriber, Subscription> S =
 				AtomicReferenceFieldUpdater.newUpdater(MergeOrderedInnerSubscriber.class, Subscription.class, "s");

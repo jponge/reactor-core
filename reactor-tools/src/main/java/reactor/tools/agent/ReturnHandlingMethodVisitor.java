@@ -107,7 +107,7 @@ class ReturnHandlingMethodVisitor extends MethodVisitor {
                     Opcodes.INVOKESTATIC,
                     "reactor/core/publisher/Hooks",
                     "addReturnInfo",
-                    "(Lorg/reactivestreams/Publisher;Ljava/lang/String;)Lorg/reactivestreams/Publisher;",
+                    "(Ljava/util/concurrent/Flow$Publisher;Ljava/lang/String;)Ljava/util/concurrent/Flow$Publisher;",
                     false
             );
             super.visitTypeInsn(Opcodes.CHECKCAST, returnType);

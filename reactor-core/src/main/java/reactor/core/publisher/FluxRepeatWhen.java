@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,10 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.function.Function;
 import java.util.stream.Stream;
-
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
 
 import reactor.core.CorePublisher;
 import reactor.core.CoreSubscriber;
@@ -45,10 +43,10 @@ import reactor.util.context.ContextView;
  */
 final class FluxRepeatWhen<T> extends InternalFluxOperator<T, T> {
 
-	final Function<? super Flux<Long>, ? extends Publisher<?>> whenSourceFactory;
+	final Function<? super Flux<Long>, ? extends Flow.Publisher<?>> whenSourceFactory;
 
 	FluxRepeatWhen(Flux<? extends T> source,
-			Function<? super Flux<Long>, ? extends Publisher<?>> whenSourceFactory) {
+			Function<? super Flux<Long>, ? extends Flow.Publisher<?>> whenSourceFactory) {
 		super(source);
 		this.whenSourceFactory =
 				Objects.requireNonNull(whenSourceFactory, "whenSourceFactory");
@@ -65,7 +63,7 @@ final class FluxRepeatWhen<T> extends InternalFluxOperator<T, T> {
 
 		serial.onSubscribe(main);
 
-		Publisher<?> p;
+		Flow.Publisher<?> p;
 
 		try {
 			p = Objects.requireNonNull(whenSourceFactory.apply(other),
@@ -164,7 +162,7 @@ final class FluxRepeatWhen<T> extends InternalFluxOperator<T, T> {
 			otherArbiter.request(1);
 		}
 
-		void setWhen(Subscription w) {
+		void setWhen(Flow.Subscription w) {
 			otherArbiter.set(w);
 		}
 
@@ -230,7 +228,7 @@ final class FluxRepeatWhen<T> extends InternalFluxOperator<T, T> {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			main.setWhen(s);
 		}
 

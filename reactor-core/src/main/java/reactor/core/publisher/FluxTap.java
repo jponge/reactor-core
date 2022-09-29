@@ -16,7 +16,7 @@
 
 package reactor.core.publisher;
 
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
@@ -25,6 +25,8 @@ import reactor.core.observability.SignalListener;
 import reactor.core.observability.SignalListenerFactory;
 import reactor.util.annotation.Nullable;
 import reactor.util.context.Context;
+
+import java.util.concurrent.Flow;
 
 /**
  * A generic per-Subscription side effect {@link Flux} that notifies a {@link SignalListener} of most events.

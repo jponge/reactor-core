@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2017-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ package reactor.test.publisher;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Flow;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 
-import org.reactivestreams.Subscription;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -187,7 +187,7 @@ public abstract class FluxOperatorTest<I, O>
 
 	@Override
 	protected Flux<O> doOnSubscribe(Flux<O> output,
-			Consumer<? super Subscription> doOnSubscribe) {
+			Consumer<? super Flow.Subscription> doOnSubscribe) {
 		return output.doOnSubscribe(doOnSubscribe);
 	}
 

@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,9 +32,8 @@ import java.util.function.Function;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
@@ -42,7 +42,6 @@ import reactor.core.Scannable;
 import reactor.core.TestLoggerExtension;
 import reactor.core.publisher.FluxPeekFuseableTest.AssertQueueSubscription;
 import reactor.core.scheduler.Schedulers;
-import reactor.test.util.LoggerUtils;
 import reactor.test.StepVerifier;
 import reactor.test.publisher.TestPublisher;
 import reactor.test.subscriber.AssertSubscriber;
@@ -74,11 +73,11 @@ public class FluxFlatMapTest {
 			droppedRef.set(null);
 
 			AtomicInteger terminalState = new AtomicInteger();
-			AtomicReference<Subscriber<? super Integer>> sub1 = new AtomicReference<>();
-			AtomicReference<Subscriber<? super Integer>> sub2 = new AtomicReference<>();
+			AtomicReference<Flow.Subscriber<? super Integer>> sub1 = new AtomicReference<>();
+			AtomicReference<Flow.Subscriber<? super Integer>> sub2 = new AtomicReference<>();
 
 			CountDownLatch latch = new CountDownLatch(1);
-			Flux.merge((Publisher<Integer>) sub1::set, (Publisher<Integer>) sub2::set)
+			Flux.merge((Flow.Publisher<Integer>) sub1::set, (Flow.Publisher<Integer>) sub2::set)
 			    .subscribe(v -> {},
 					    err -> {
 						    terminalState.addAndGet(10);
@@ -1128,7 +1127,7 @@ public class FluxFlatMapTest {
 	@Test
 	public void noInnerReordering() {
 		AssertSubscriber<Integer> ts = AssertSubscriber.create(0);
-		FluxFlatMap.FlatMapMain<Publisher<Integer>, Integer> fmm =
+		FluxFlatMap.FlatMapMain<Flow.Publisher<Integer>, Integer> fmm =
 				new FluxFlatMap.FlatMapMain<>(ts,
 						Function.identity(),
 						false,
@@ -1157,7 +1156,7 @@ public class FluxFlatMapTest {
 	@Test
 	public void noOuterScalarReordering() {
 		AssertSubscriber<Integer> ts = AssertSubscriber.create(0);
-		FluxFlatMap.FlatMapMain<Publisher<Integer>, Integer> fmm =
+		FluxFlatMap.FlatMapMain<Flow.Publisher<Integer>, Integer> fmm =
 				new FluxFlatMap.FlatMapMain<>(ts,
 						Function.identity(),
 						false,

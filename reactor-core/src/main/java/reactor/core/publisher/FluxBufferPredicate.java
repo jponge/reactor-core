@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.function.BiPredicate;
@@ -28,8 +29,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -131,11 +130,11 @@ final class FluxBufferPredicate<T, C extends Collection<? super T>>
 				AtomicLongFieldUpdater.newUpdater(BufferPredicateSubscriber.class,
 						"requestedFromSource");
 
-		volatile Subscription s;
+		volatile Flow.Subscription s;
 
 		static final AtomicReferenceFieldUpdater<BufferPredicateSubscriber,
-				Subscription> S = AtomicReferenceFieldUpdater.newUpdater
-				(BufferPredicateSubscriber.class, Subscription.class, "s");
+                Flow.Subscription> S = AtomicReferenceFieldUpdater.newUpdater
+				(BufferPredicateSubscriber.class, Flow.Subscription.class, "s");
 
 		BufferPredicateSubscriber(CoreSubscriber<? super C> actual, C initialBuffer,
 				Supplier<C> bufferSupplier, Predicate<? super T> predicate, Mode mode) {
@@ -189,7 +188,7 @@ final class FluxBufferPredicate<T, C extends Collection<? super T>>
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.setOnce(S, this, s)) {
 				actual.onSubscribe(this);
 			}

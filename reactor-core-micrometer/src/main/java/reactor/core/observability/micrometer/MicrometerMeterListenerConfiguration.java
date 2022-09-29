@@ -19,11 +19,10 @@ package reactor.core.observability.micrometer;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Tags;
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 
 import reactor.core.Scannable;
 import reactor.core.publisher.Flux;

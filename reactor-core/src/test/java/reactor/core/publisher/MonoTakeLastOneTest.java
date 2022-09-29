@@ -19,7 +19,7 @@ package reactor.core.publisher;
 import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;

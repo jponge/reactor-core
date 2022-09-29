@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,12 @@ package reactor.core.publisher;
 
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Flow;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.reactivestreams.Publisher;
+import java.util.concurrent.Flow.Publisher;
 
 import reactor.core.Exceptions;
 import reactor.core.publisher.FluxOnAssembly.AssemblySnapshot;
@@ -345,7 +346,7 @@ public abstract class Hooks {
 
 	/**
 	 * Set the custom global error mode hook for operators that support resuming
-	 * during an error in their {@link org.reactivestreams.Subscriber#onNext(Object)}.
+	 * during an error in their {@link Flow.Subscriber#onNext(Object)}.
 	 * <p>
 	 * The hook is a {@link BiFunction} of {@link Throwable} and potentially null {@link Object}.
 	 * If it is also a {@link java.util.function.BiPredicate}, its

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2016-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,9 @@
 
 package reactor.core.publisher;
 
-import org.reactivestreams.Publisher;
 import reactor.core.CoreSubscriber;
+
+import java.util.concurrent.Flow;
 
 /**
  * Represents a never publisher which only calls onSubscribe.
@@ -29,7 +30,7 @@ import reactor.core.CoreSubscriber;
  */
 final class FluxNever extends Flux<Object> implements SourceProducer<Object> {
 
-	static final Publisher<Object> INSTANCE = new FluxNever();
+	static final Flow.Publisher<Object> INSTANCE = new FluxNever();
 
 	FluxNever() {
 		// deliberately no op

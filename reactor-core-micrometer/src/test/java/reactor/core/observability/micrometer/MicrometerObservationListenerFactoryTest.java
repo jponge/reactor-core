@@ -18,7 +18,6 @@ package reactor.core.observability.micrometer;
 
 import io.micrometer.observation.ObservationRegistry;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Publisher;
 
 import reactor.core.observability.SignalListener;
 import reactor.core.publisher.Flux;
@@ -26,6 +25,8 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.Operators;
 import reactor.util.context.Context;
 import reactor.util.context.ContextView;
+
+import java.util.concurrent.Flow;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -67,7 +68,7 @@ class MicrometerObservationListenerFactoryTest {
 
 	@Test
 	void createListenerOfTypeMicrometer() {
-		Publisher<Integer> source = Mono.just(1);
+		Flow.Publisher<Integer> source = Mono.just(1);
 		ContextView expectedContext = Context.of(1, "A");
 		MicrometerObservationListenerConfiguration conf = CUSTOM_FACTORY.initializePublisherState(source);
 		SignalListener<?> signalListener = CUSTOM_FACTORY.createListener(source, expectedContext, conf);

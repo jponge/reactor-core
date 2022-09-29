@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2018-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
 
 package reactor.core.publisher.tck;
 
-import org.reactivestreams.Publisher;
 import org.reactivestreams.tck.PublisherVerification;
 import org.reactivestreams.tck.TestEnvironment;
 import org.testng.annotations.Test;
 import reactor.core.publisher.Flux;
+
+import java.util.concurrent.Flow;
 
 @Test
 public class FluxSwitchOnFirstVerification extends PublisherVerification<Integer> {
@@ -30,13 +31,13 @@ public class FluxSwitchOnFirstVerification extends PublisherVerification<Integer
     }
 
     @Override
-    public Publisher<Integer> createPublisher(long elements) {
+    public Flow.Publisher<Integer> createPublisher(long elements) {
         return Flux.range(0, Integer.MAX_VALUE < elements ? Integer.MAX_VALUE : (int) elements)
                    .switchOnFirst((first, innerFlux) -> innerFlux);
     }
 
     @Override
-    public Publisher<Integer> createFailedPublisher() {
+    public Flow.Publisher<Integer> createFailedPublisher() {
         return Flux.<Integer>error(new RuntimeException())
                    .switchOnFirst((first, innerFlux) -> innerFlux);
     }

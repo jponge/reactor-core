@@ -16,16 +16,15 @@
 
 package reactor.core.observability.micrometer;
 
-import io.micrometer.core.instrument.Clock;
-import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
-import org.reactivestreams.Publisher;
 
 import reactor.core.observability.SignalListener;
 import reactor.core.observability.SignalListenerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.context.ContextView;
+
+import java.util.concurrent.Flow;
 
 /**
  * A {@link SignalListenerFactory} for {@link MicrometerMeterListener}.
@@ -41,7 +40,7 @@ class MicrometerMeterListenerFactory<T> implements SignalListenerFactory<T, Micr
 	}
 
 	@Override
-	public MicrometerMeterListenerConfiguration initializePublisherState(Publisher<? extends T> source) {
+	public MicrometerMeterListenerConfiguration initializePublisherState(Flow.Publisher<? extends T> source) {
 		if (source instanceof Mono) {
 			return MicrometerMeterListenerConfiguration.fromMono((Mono<?>) source, this.registry);
 		}
@@ -54,8 +53,8 @@ class MicrometerMeterListenerFactory<T> implements SignalListenerFactory<T, Micr
 	}
 
 	@Override
-	public SignalListener<T> createListener(Publisher<? extends T> source, ContextView listenerContext,
-											MicrometerMeterListenerConfiguration publisherContext) {
+	public SignalListener<T> createListener(Flow.Publisher<? extends T> source, ContextView listenerContext,
+                                            MicrometerMeterListenerConfiguration publisherContext) {
 		return new MicrometerMeterListener<>(publisherContext);
 	}
 }

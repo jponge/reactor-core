@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021 VMware Inc. or its affiliates, All Rights Reserved.
+ * Copyright (c) 2020-2022 VMware Inc. or its affiliates, All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,8 @@
 package reactor.util.retry;
 
 import java.time.Duration;
+import java.util.concurrent.Flow;
 import java.util.function.Function;
-
-import org.reactivestreams.Publisher;
 
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
@@ -63,18 +62,18 @@ public abstract class Retry {
 	 * Generates the companion publisher responsible for reacting to incoming {@link RetrySignal} emissions, effectively
 	 * deciding when to retry.
 	 * <p>
-	 * When the source signals an error, that {@link org.reactivestreams.Subscriber#onError(Throwable) onError} signal
+	 * When the source signals an error, that {@link Flow.Subscriber#onError(Throwable) onError} signal
 	 * will be suppressed. Its {@link Throwable} will instead be attached to a {@link RetrySignal}, immediately emitted
 	 * on the {@code retrySignals} publisher. Right after that emission,
-	 * {@link org.reactivestreams.Subscription#request(long) request(1)} is called on the companion publisher.
+	 * {@link Flow.Subscription#request(long) request(1)} is called on the companion publisher.
 	 * <p>
 	 * The response to that request decides if a retry should be made. Thus, the outer publisher will wait until a signal
 	 * is emitted by the companion publisher, making it possible to delay retry attempts.
 	 * <p>
 	 * Any
-	 * {@link org.reactivestreams.Subscriber#onNext(Object) onNext} emitted by the companion publisher triggers a retry,
-	 * {@link org.reactivestreams.Subscriber#onError(Throwable) onError} will fail the outer publisher and
-	 * {@link org.reactivestreams.Subscriber#onComplete() onComplete} will complete the outer publisher (effectively
+	 * {@link Flow.Subscriber#onNext(Object) onNext} emitted by the companion publisher triggers a retry,
+	 * {@link Flow.Subscriber#onError(Throwable) onError} will fail the outer publisher and
+	 * {@link Flow.Subscriber#onComplete() onComplete} will complete the outer publisher (effectively
 	 * suppressing the original error/{@link Throwable}).
 	 * <p>
 	 * As an example, the simplest form of retry companion would be to return the incoming {@link Flux} of {@link RetrySignal}
@@ -85,7 +84,7 @@ public abstract class Retry {
 	 * @return the companion publisher responsible for reacting to incoming {@link RetrySignal} emissions,
 	 * effectively deciding when to retry.
 	 */
-	public abstract Publisher<?> generateCompanion(Flux<RetrySignal> retrySignals);
+	public abstract Flow.Publisher<?> generateCompanion(Flux<RetrySignal> retrySignals);
 
 	/**
 	 * Return the user provided context that was set at construction time.
@@ -112,18 +111,18 @@ public abstract class Retry {
 		long totalRetries();
 
 		/**
-		 * Retry counter resetting after each {@link org.reactivestreams.Subscriber#onNext(Object) onNext} (in other
-		 * words the number of errors -1 since the latest {@link org.reactivestreams.Subscriber#onNext(Object) onNext}).
+		 * Retry counter resetting after each {@link Flow.Subscriber#onNext(Object) onNext} (in other
+		 * words the number of errors -1 since the latest {@link Flow.Subscriber#onNext(Object) onNext}).
 		 *
-		 * @return the number of retries since the latest {@link org.reactivestreams.Subscriber#onNext(Object) onNext},
+		 * @return the number of retries since the latest {@link Flow.Subscriber#onNext(Object) onNext},
 		 * or the number of retries since the source first was subscribed to if there hasn't been any
-		 * {@link org.reactivestreams.Subscriber#onNext(Object) onNext} signals (in which case
+		 * {@link Flow.Subscriber#onNext(Object) onNext} signals (in which case
 		 * {@link RetrySignal#totalRetries()} and {@link RetrySignal#totalRetriesInARow()} are equivalent).
 		 */
 		long totalRetriesInARow();
 
 		/**
-		 * The {@link Throwable} that caused the current {@link org.reactivestreams.Subscriber#onError(Throwable) onError} signal.
+		 * The {@link Throwable} that caused the current {@link Flow.Subscriber#onError(Throwable) onError} signal.
 		 *
 		 * @return the current failure.
 		 */
@@ -208,7 +207,7 @@ public abstract class Retry {
 
 	/**
 	 * A {@link RetrySpec} preconfigured for a simple strategy with maximum number of retry attempts over
-	 * subsequent transient errors. An {@link org.reactivestreams.Subscriber#onNext(Object)} between
+	 * subsequent transient errors. An {@link Flow.Subscriber#onNext(Object)} between
 	 * errors resets the counter (see {@link RetrySpec#transientErrors(boolean)}).
 	 * <p>
 	 * <img class="marble" src="doc-files/marbles/retrySpecInARow.svg" alt="">
@@ -240,10 +239,10 @@ public abstract class Retry {
 	 * @param function the {@link Function} representing the desired {@link Retry} strategy as a lambda
 	 * @return the {@link Retry} strategy adapted from the {@link Function}
 	 */
-	public static final Retry from(Function<Flux<RetrySignal>, ? extends Publisher<?>> function) {
+	public static final Retry from(Function<Flux<RetrySignal>, ? extends Flow.Publisher<?>> function) {
 		return new Retry(Context.empty()) {
 			@Override
-			public Publisher<?> generateCompanion(Flux<RetrySignal> retrySignalCompanion) {
+			public Flow.Publisher<?> generateCompanion(Flux<RetrySignal> retrySignalCompanion) {
 				return function.apply(retrySignalCompanion);
 			}
 		};
@@ -256,10 +255,10 @@ public abstract class Retry {
 	 * @param function the {@link Function} representing the desired {@link Retry} strategy as a lambda
 	 * @return the {@link Retry} strategy adapted from the {@link Function}
 	 */
-	public static final Retry withThrowable(Function<Flux<Throwable>, ? extends Publisher<?>> function) {
+	public static final Retry withThrowable(Function<Flux<Throwable>, ? extends Flow.Publisher<?>> function) {
 		return new Retry(Context.empty()) {
 			@Override
-			public Publisher<?> generateCompanion(Flux<RetrySignal> retrySignals) {
+			public Flow.Publisher<?> generateCompanion(Flux<RetrySignal> retrySignals) {
 				return function.apply(retrySignals.map(RetrySignal::failure));
 			}
 		};

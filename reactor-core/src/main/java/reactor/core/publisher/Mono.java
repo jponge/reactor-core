@@ -25,11 +25,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Spliterator;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -42,9 +38,9 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import io.micrometer.core.instrument.MeterRegistry;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CorePublisher;
 import reactor.core.CoreSubscriber;
@@ -799,8 +795,8 @@ public abstract class Mono<T> implements CorePublisher<T> {
 	 *         are the same according to the specified function
 	 */
 	public static <T> Mono<Boolean> sequenceEqual(Publisher<? extends T> source1,
-			Publisher<? extends T> source2,
-			BiPredicate<? super T, ? super T> isEqual, int prefetch) {
+                                                  Publisher<? extends T> source2,
+                                                  BiPredicate<? super T, ? super T> isEqual, int prefetch) {
 		return onAssembly(new MonoSequenceEqual<>(source1, source2, isEqual, prefetch));
 	}
 
@@ -906,8 +902,8 @@ public abstract class Mono<T> implements CorePublisher<T> {
 	 * asynchronous cleanup sequence completes
 	 */
 	public static <T, D> Mono<T> usingWhen(Publisher<D> resourceSupplier,
-			Function<? super D, ? extends Mono<? extends T>> resourceClosure,
-			Function<? super D, ? extends Publisher<?>> asyncCleanup) {
+                                           Function<? super D, ? extends Mono<? extends T>> resourceClosure,
+                                           Function<? super D, ? extends Publisher<?>> asyncCleanup) {
 		return usingWhen(resourceSupplier, resourceClosure, asyncCleanup,
 				(res, error) -> asyncCleanup.apply(res),
 				asyncCleanup);
@@ -966,11 +962,11 @@ public abstract class Mono<T> implements CorePublisher<T> {
 	 *
 	 */
 	public static <T, D> Mono<T> usingWhen(Publisher<D> resourceSupplier,
-			Function<? super D, ? extends Mono<? extends T>> resourceClosure,
-			Function<? super D, ? extends Publisher<?>> asyncComplete,
-			BiFunction<? super D, ? super Throwable, ? extends Publisher<?>> asyncError,
-			//the operator itself accepts null for asyncCancel, but we won't in the public API
-			Function<? super D, ? extends Publisher<?>> asyncCancel) {
+                                           Function<? super D, ? extends Mono<? extends T>> resourceClosure,
+                                           Function<? super D, ? extends Publisher<?>> asyncComplete,
+                                           BiFunction<? super D, ? super Throwable, ? extends Publisher<?>> asyncError,
+                                           //the operator itself accepts null for asyncCancel, but we won't in the public API
+                                           Function<? super D, ? extends Publisher<?>> asyncCancel) {
 		return onAssembly(new MonoUsingWhen<>(resourceSupplier, resourceClosure,
 				asyncComplete, asyncError, asyncCancel));
 	}
@@ -4083,8 +4079,8 @@ public abstract class Mono<T> implements CorePublisher<T> {
 	 * <img class="marble" src="doc-files/marbles/retryWhenSpecForMono.svg" alt="">
 	 * <p>
 	 * Note that the {@link reactor.util.retry.Retry.RetrySignal} state can be transient and change between each source
-	 * {@link org.reactivestreams.Subscriber#onError(Throwable) onError} or
-	 * {@link org.reactivestreams.Subscriber#onNext(Object) onNext}. If processed with a delay,
+	 * {@link Subscriber#onError(Throwable) onError} or
+	 * {@link Subscriber#onNext(Object) onNext}. If processed with a delay,
 	 * this could lead to the represented state being out of sync with the state at which the retry
 	 * was evaluated. Map it to {@link reactor.util.retry.Retry.RetrySignal#copy()} right away to mediate this.
 	 * <p>

@@ -17,12 +17,13 @@
 package reactor.core.publisher;
 
 import java.util.Objects;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.stream.Stream;
 
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscription;
+import java.util.concurrent.Flow.Publisher;
+
 import reactor.core.CoreSubscriber;
 import reactor.core.Exceptions;
 import reactor.core.Fuseable;
@@ -353,10 +354,10 @@ final class MonoWhen extends Mono<Void> implements SourceProducer<Void>  {
 
 		final WhenCoordinator parent;
 
-		volatile Subscription s;
-		static final AtomicReferenceFieldUpdater<WhenInner, Subscription> S =
+		volatile Flow.Subscription s;
+		static final AtomicReferenceFieldUpdater<WhenInner, Flow.Subscription> S =
 				AtomicReferenceFieldUpdater.newUpdater(WhenInner.class,
-						Subscription.class,
+						Flow.Subscription.class,
 						"s");
 		Throwable error;
 
@@ -392,7 +393,7 @@ final class MonoWhen extends Mono<Void> implements SourceProducer<Void>  {
 		}
 
 		@Override
-		public void onSubscribe(Subscription s) {
+		public void onSubscribe(Flow.Subscription s) {
 			if (Operators.setOnce(S, this, s)) {
 				s.request(Long.MAX_VALUE);
 			}

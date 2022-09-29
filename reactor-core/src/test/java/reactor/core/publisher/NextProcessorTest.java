@@ -20,6 +20,7 @@ import java.lang.ref.WeakReference;
 import java.time.Duration;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -27,8 +28,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+
+import java.util.concurrent.Flow.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -37,7 +38,6 @@ import reactor.core.TestLoggerExtension;
 import reactor.test.StepVerifier;
 import reactor.test.publisher.TestPublisher;
 import reactor.test.subscriber.AssertSubscriber;
-import reactor.test.util.LoggerUtils;
 import reactor.test.util.TestLogger;
 import reactor.util.function.Tuple2;
 
@@ -325,7 +325,7 @@ class NextProcessorTest {
 		NextProcessor<String> mp = new NextProcessor<>(null);
 
 		assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> {
-			mp.subscribe((Subscriber<String>) null);
+			mp.subscribe((Flow.Subscriber<String>) null);
 		});
 	}
 

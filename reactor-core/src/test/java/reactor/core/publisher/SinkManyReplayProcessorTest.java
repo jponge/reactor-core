@@ -17,12 +17,12 @@
 package reactor.core.publisher;
 
 import java.time.Duration;
+import java.util.concurrent.Flow;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Subscription;
 
 import reactor.core.CoreSubscriber;
 import reactor.core.Disposable;
@@ -650,7 +650,7 @@ public class SinkManyReplayProcessorTest {
 	@Test
 	public void scanProcessor() {
 		SinkManyReplayProcessor<String> test = SinkManyReplayProcessor.create(16, false);
-		Subscription subscription = Operators.emptySubscription();
+		Flow.Subscription subscription = Operators.emptySubscription();
 		test.onSubscribe(subscription);
 
 		assertThat(test.scan(Scannable.Attr.PARENT)).isEqualTo(subscription);
